@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="快速搭建ELK日志分析系统一、ELK搭建篇官网地址:https:&#x2F;&#x2F;www.elastic.co&#x2F;cn&#x2F; 官网权威指南:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;cn&#x2F;elasticsearch&#x2F;guide&#x2F;current&#x2F;index.html 安装指南：https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;elasticsearch&#x2F;reference&#x2F;5.x&#x2F;rpm.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速搭建ELK日志分析系统">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/26/100006/index.html">
+<meta property="og:site_name" content="黎人过客">
+<meta property="og:description" content="快速搭建ELK日志分析系统一、ELK搭建篇官网地址:https:&#x2F;&#x2F;www.elastic.co&#x2F;cn&#x2F; 官网权威指南:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;cn&#x2F;elasticsearch&#x2F;guide&#x2F;current&#x2F;index.html 安装指南：https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;elasticsearch&#x2F;reference&#x2F;5.x&#x2F;rpm.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170755587-1541111347.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170808446-1582541148.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170824884-1617614854.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170838228-1637365021.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170853587-1777231371.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170905900-638904684.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170916775-655571206.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170928228-1645137078.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170938400-1045833173.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170944103-1284157218.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171002478-1596125301.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171010618-1450100637.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171024228-1048856012.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171035540-1353466323.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171045118-662003146.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171059712-519877548.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171108993-934738573.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/icon_weibo_24.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/wechat.png">
+<meta property="og:image" content="https://pic.cnblogs.com/face/1181869/20170616142315.png">
+<meta property="article:published_time" content="2021-04-25T16:12:43.116Z">
+<meta property="article:modified_time" content="2021-04-28T14:28:30.673Z">
+<meta property="article:author" content="Weely.cc">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170755587-1541111347.jpg">
+
+<link rel="canonical" href="http://blog.weely.cc/2021/04/26/100006/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>快速搭建ELK日志分析系统 | 黎人过客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">黎人过客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">好记性不如烂笔头</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/26/100006/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="黎人过客的小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          快速搭建ELK日志分析系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-26 00:12:43" itemprop="dateCreated datePublished" datetime="2021-04-26T00:12:43+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-28 22:28:30" itemprop="dateModified" datetime="2021-04-28T22:28:30+08:00">2021-04-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="快速搭建ELK日志分析系统"><a href="#快速搭建ELK日志分析系统" class="headerlink" title="快速搭建ELK日志分析系统"></a><a href="https://www.cnblogs.com/yuhuLin/p/7018858.html" target="_blank" rel="noopener">快速搭建ELK日志分析系统</a></h1><h1 id="一、ELK搭建篇"><a href="#一、ELK搭建篇" class="headerlink" title="一、ELK搭建篇"></a>一、ELK搭建篇</h1><p>官网地址:<a href="https://www.elastic.co/cn/" target="_blank" rel="noopener">https://www.elastic.co/cn/</a></p>
+<p>官网权威指南:<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html" target="_blank" rel="noopener">https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html</a></p>
+<p>安装指南：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.x/rpm.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/5.x/rpm.html</a></p>
+<p>ELK是Elasticsearch、Logstash、Kibana的简称，这三者是核心套件，但并非全部。</p>
+<a id="more"></a>
+
+<p>Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。</p>
+<p>Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传递（例如 RabbitMQ）和JMX，它能够以多种方式输出数据，包括电子邮件、websockets和Elasticsearch。</p>
+<p>Kibana是一个基于Web的图形界面，用于搜索、分析和可视化存储在 Elasticsearch指标中的日志数据。它利用Elasticsearch的REST接口来检索数据，不仅允许用户创建他们自己的数据的定制仪表板视图，还允许他们以特殊的方式查询和过滤数据</p>
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170755587-1541111347.jpg" alt="img"></p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Centos6.5 两台</span><br><span class="line">IP：192.168.1.202 安装： elasticsearch、logstash、Kibana、Nginx、Http、Redis</span><br><span class="line">    192.168.1.201 安装:  logstash</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">安装elasticsearch的yum源的密钥（这个需要在所有服务器上都配置）</span><br><span class="line"># rpm --import https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;GPG-KEY-elasticsearch</span><br><span class="line"></span><br><span class="line">配置elasticsearch的yum源</span><br><span class="line"># vim &#x2F;etc&#x2F;yum.repos.d&#x2F;elasticsearch.repo</span><br><span class="line"></span><br><span class="line">在elasticsearch.repo文件中添加如下内容</span><br><span class="line">[elasticsearch-5.x]</span><br><span class="line">name&#x3D;Elasticsearch repository for 5.x packages</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;packages&#x2F;5.x&#x2F;yum</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;GPG-KEY-elasticsearch</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">autorefresh&#x3D;1</span><br><span class="line">type&#x3D;rpm-md</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装elasticsearch的环境"><a href="#安装elasticsearch的环境" class="headerlink" title="安装elasticsearch的环境"></a>安装elasticsearch的环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">安装elasticsearch</span><br><span class="line"># yum install -y elasticsearch</span><br><span class="line"></span><br><span class="line">安装java环境(java环境必须是1.8版本以上的)</span><br><span class="line"></span><br><span class="line">wget http:&#x2F;&#x2F;download.oracle.com&#x2F;otn-pub&#x2F;java&#x2F;jdk&#x2F;8u131-b11&#x2F;d54c1d3a095b4ff2b6607d096fa80163&#x2F;jdk-8u131-linux-x64.rpm</span><br><span class="line"></span><br><span class="line">rpm -ivh jdk-8u131-linux-x64.rpm </span><br><span class="line"></span><br><span class="line">验证java安装成功</span><br><span class="line">java -version</span><br><span class="line">java version &quot;1.8.0_131&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_131-b11)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<p>创建elasticsearch data的存放目录，并修改该目录的属主属组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># mkdir -p &#x2F;data&#x2F;es-data   (自定义用于存放data数据的目录)</span><br><span class="line"># chown -R elasticsearch:elasticsearch &#x2F;data&#x2F;es-data</span><br></pre></td></tr></table></figure>
+
+<p>修改elasticsearch的日志属主属组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># chown -R elasticsearch:elasticsearch &#x2F;var&#x2F;log&#x2F;elasticsearch&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>修改elasticsearch的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># vim &#x2F;etc&#x2F;elasticsearch&#x2F;elasticsearch.yml</span><br><span class="line"></span><br><span class="line">找到配置文件中的cluster.name，打开该配置并设置集群名称</span><br><span class="line">cluster.name: demon</span><br><span class="line"></span><br><span class="line">找到配置文件中的node.name，打开该配置并设置节点名称</span><br><span class="line">node.name: elk-1</span><br><span class="line"></span><br><span class="line">修改data存放的路径</span><br><span class="line">path.data: &#x2F;data&#x2F;es-data</span><br><span class="line"></span><br><span class="line">修改logs日志的路径</span><br><span class="line">path.logs: &#x2F;var&#x2F;log&#x2F;elasticsearch&#x2F;</span><br><span class="line"></span><br><span class="line">配置内存使用用交换分区</span><br><span class="line">bootstrap.memory_lock: true</span><br><span class="line"></span><br><span class="line">监听的网络地址</span><br><span class="line">network.host: 0.0.0.0</span><br><span class="line"></span><br><span class="line">开启监听的端口</span><br><span class="line">http.port: 9200</span><br><span class="line"></span><br><span class="line">增加新的参数，这样head插件可以访问es (5.x版本，如果没有可以自己手动加)</span><br><span class="line">http.cors.enabled: true</span><br><span class="line">http.cors.allow-origin: &quot;*&quot;</span><br><span class="line">启动elasticsearch服务</span><br></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> &#x2F;etc&#x2F;init.d&#x2F;elasticsearch start</span><br><span class="line"></span><br><span class="line">Starting elasticsearch: Java HotSpot(TM) 64-Bit Server VM warning: INFO: os::commit_memory(0x0000000085330000, 2060255232, 0) failed; error&#x3D;&#39;Cannot allocate memory&#39; (errno&#x3D;12)</span><br><span class="line">#</span><br><span class="line"># There is insufficient memory for the Java Runtime Environment to continue.</span><br><span class="line"># Native memory allocation (mmap) failed to map 2060255232 bytes for committing reserved memory.</span><br><span class="line"># An error report file with more information is saved as:</span><br><span class="line"># &#x2F;tmp&#x2F;hs_err_pid2616.log</span><br><span class="line">                                                           [FAILED]</span><br><span class="line">这个报错是因为默认使用的内存大小为2G，虚拟机没有那么多的空间</span><br><span class="line"></span><br><span class="line">修改参数：</span><br><span class="line">vim &#x2F;etc&#x2F;elasticsearch&#x2F;jvm.options</span><br><span class="line">-Xms512m</span><br><span class="line">-Xmx512m</span><br><span class="line"></span><br><span class="line">再次启动</span><br><span class="line">&#x2F;etc&#x2F;init.d&#x2F;elasticsearch start</span><br><span class="line"></span><br><span class="line">查看服务状态，如果有报错可以去看错误日志 less &#x2F;var&#x2F;log&#x2F;elasticsearch&#x2F;demon.log(日志的名称是以集群名称命名的)</span><br><span class="line"></span><br><span class="line">创建开机自启动服务</span><br><span class="line"># chkconfig elasticsearch on</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">需要修改几个参数，不然启动会报错</span><br><span class="line"></span><br><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.conf</span><br><span class="line">在末尾追加以下内容（elk为启动用户，当然也可以指定为*）</span><br><span class="line">elk soft nofile 65536</span><br><span class="line">elk hard nofile 65536</span><br><span class="line">elk soft nproc 2048</span><br><span class="line">elk hard nproc 2048</span><br><span class="line">elk soft memlock unlimited</span><br><span class="line">elk hard memlock unlimited</span><br><span class="line"></span><br><span class="line">继续再修改一个参数</span><br><span class="line">vim &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;90-nproc.conf</span><br><span class="line">将里面的1024改为2048（ES最少要求为2048）</span><br><span class="line">*          soft    nproc     2048</span><br><span class="line"></span><br><span class="line">另外还需注意一个问题（在日志发现如下内容，这样也会导致启动失败，这一问题困扰了很久）</span><br><span class="line">[2017-06-14T19:19:01,641][INFO ][o.e.b.BootstrapChecks    ] [elk-1] bound or publishing to a non-loopback or non-link-local address, enforcing bootstrap checks</span><br><span class="line">[2017-06-14T19:19:01,658][ERROR][o.e.b.Bootstrap          ] [elk-1] node validation exception</span><br><span class="line">[1] bootstrap checks failed</span><br><span class="line">[1]: system call filters failed to install; check the logs and fix your configuration or disable system call filters at your own risk</span><br><span class="line">	</span><br><span class="line">解决：修改配置文件，在配置文件添加一项参数（目前还没明白此参数的作用）</span><br><span class="line">vim &#x2F;etc&#x2F;elasticsearch&#x2F;elasticsearch.yml </span><br><span class="line">bootstrap.system_call_filter: false</span><br></pre></td></tr></table></figure>
+
+<p>通过浏览器请求下9200的端口，看下是否成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">先检查9200端口是否起来</span><br><span class="line">netstat -antp |grep 9200</span><br><span class="line">tcp        0      0 :::9200                     :::*                        LISTEN      2934&#x2F;java</span><br><span class="line"></span><br><span class="line">浏览器访问测试是否正常（以下为正常）</span><br><span class="line"># curl http:&#x2F;&#x2F;127.0.0.1:9200&#x2F;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot; : &quot;linux-node1&quot;,</span><br><span class="line">  &quot;cluster_name&quot; : &quot;demon&quot;,</span><br><span class="line">  &quot;cluster_uuid&quot; : &quot;kM0GMFrsQ8K_cl5Fn7BF-g&quot;,</span><br><span class="line">  &quot;version&quot; : &#123;</span><br><span class="line">    &quot;number&quot; : &quot;5.4.0&quot;,</span><br><span class="line">    &quot;build_hash&quot; : &quot;780f8c4&quot;,</span><br><span class="line">    &quot;build_date&quot; : &quot;2017-04-28T17:43:27.229Z&quot;,</span><br><span class="line">    &quot;build_snapshot&quot; : false,</span><br><span class="line">    &quot;lucene_version&quot; : &quot;6.5.0&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;tagline&quot; : &quot;You Know, for Search&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何和elasticsearch交互"><a href="#如何和elasticsearch交互" class="headerlink" title="如何和elasticsearch交互"></a>如何和elasticsearch交互</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">JavaAPI</span><br><span class="line"></span><br><span class="line">RESTful API</span><br><span class="line">Javascript,.Net,PHP,Perl,Python</span><br><span class="line"></span><br><span class="line">利用API查看状态</span><br><span class="line"># curl -i -XGET &#39;localhost:9200&#x2F;_count?pretty&#39; </span><br><span class="line">    HTTP&#x2F;1.1 200 OK</span><br><span class="line">    content-type: application&#x2F;json; charset&#x3D;UTF-8</span><br><span class="line">    content-length: 95</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">      &quot;count&quot; : 0,</span><br><span class="line">      &quot;_shards&quot; : &#123;</span><br><span class="line">        &quot;total&quot; : 0,</span><br><span class="line">        &quot;successful&quot; : 0,</span><br><span class="line">        &quot;failed&quot; : 0</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">安装elasticsearch-head插件</span><br><span class="line"></span><br><span class="line">安装docker镜像或者通过github下载elasticsearch-head项目都是可以的，1或者2两种方式选择一种安装使用即可</span><br><span class="line"></span><br><span class="line">1. 使用docker的集成好的elasticsearch-head</span><br><span class="line">    # docker run -p 9100:9100 mobz&#x2F;elasticsearch-head:5</span><br><span class="line">    </span><br><span class="line">    docker容器下载成功并启动以后，运行浏览器打开http:&#x2F;&#x2F;localhost:9100&#x2F;</span><br><span class="line"></span><br><span class="line">2. 使用git安装elasticsearch-head</span><br><span class="line">    # yum install -y npm</span><br><span class="line">    # git clone git:&#x2F;&#x2F;github.com&#x2F;mobz&#x2F;elasticsearch-head.git</span><br><span class="line">    # cd elasticsearch-head</span><br><span class="line">    # npm install</span><br><span class="line">    # npm run start</span><br><span class="line">	检查端口是否起来</span><br><span class="line">	netstat -antp |grep 9100</span><br><span class="line">    浏览器访问测试是否正常</span><br><span class="line">	http:&#x2F;&#x2F;IP:9100&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170808446-1582541148.png" alt="img"></p>
+<h2 id="LogStash的使用"><a href="#LogStash的使用" class="headerlink" title="LogStash的使用"></a>LogStash的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">安装Logstash环境：</span><br><span class="line"></span><br><span class="line">官方安装手册:</span><br><span class="line">https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;logstash&#x2F;current&#x2F;installing-logstash.html</span><br><span class="line"></span><br><span class="line">下载yum源的密钥认证：</span><br><span class="line"># rpm --import https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;GPG-KEY-elasticsearch</span><br><span class="line"></span><br><span class="line">利用yum安装logstash</span><br><span class="line"># yum install -y logstash</span><br><span class="line"></span><br><span class="line">查看下logstash的安装目录</span><br><span class="line"># rpm -ql logstash</span><br><span class="line"></span><br><span class="line">创建一个软连接，每次执行命令的时候不用在写安装路劲（默认安装在&#x2F;usr&#x2F;share下）</span><br><span class="line">ln -s &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash &#x2F;bin&#x2F;</span><br><span class="line"></span><br><span class="line">执行logstash的命令</span><br><span class="line"># logstash -e &#39;input &#123; stdin &#123; &#125; &#125; output &#123; stdout &#123;&#125; &#125;&#39;</span><br><span class="line"></span><br><span class="line">运行成功以后输入:</span><br><span class="line">nihao</span><br><span class="line"></span><br><span class="line">stdout返回的结果:</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170824884-1617614854.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">注:</span><br><span class="line">   -e          执行操作</span><br><span class="line">   input       标准输入</span><br><span class="line">   &#123; input &#125;   插件</span><br><span class="line">   output      标准输出</span><br><span class="line">   &#123; stdout &#125;  插件  </span><br><span class="line"></span><br><span class="line">通过rubydebug来输出下更详细的信息</span><br><span class="line"># logstash -e &#39;input &#123; stdin &#123; &#125; &#125; output &#123; stdout &#123;codec &#x3D;&gt; rubydebug&#125; &#125;&#39;</span><br><span class="line"></span><br><span class="line">执行成功输入:</span><br><span class="line">nihao</span><br><span class="line"></span><br><span class="line">stdout输出的结果:</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170838228-1637365021.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如果标准输出还有elasticsearch中都需要保留应该怎么玩，看下面</span><br><span class="line"># &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash -e &#39;input &#123; stdin &#123; &#125; &#125; output &#123; elasticsearch &#123; hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;] &#125; stdout &#123; codec &#x3D;&gt; rubydebug &#125;&#125;&#39;</span><br><span class="line"></span><br><span class="line">运行成功以后输入:</span><br><span class="line">I am elk</span><br><span class="line"></span><br><span class="line">返回的结果(标准输出中的结果):</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170853587-1777231371.png" alt="img"></p>
+<h2 id="logstash使用配置文件"><a href="#logstash使用配置文件" class="headerlink" title="logstash使用配置文件"></a>logstash使用配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">官方指南:</span><br><span class="line">https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;logstash&#x2F;current&#x2F;configuration.html</span><br><span class="line"></span><br><span class="line">创建配置文件01-logstash.conf</span><br><span class="line"># vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;elk.conf</span><br><span class="line"></span><br><span class="line">文件中添加以下内容</span><br><span class="line">input &#123; stdin &#123; &#125; &#125;</span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123; hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;] &#125;</span><br><span class="line">  stdout &#123; codec &#x3D;&gt; rubydebug &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">使用配置文件运行logstash</span><br><span class="line"># logstash -f .&#x2F;elk.conf</span><br><span class="line"></span><br><span class="line">运行成功以后输入以及标准输出结果</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170905900-638904684.png" alt="img"></p>
+<h2 id="logstash的数据库类型"><a href="#logstash的数据库类型" class="headerlink" title="logstash的数据库类型"></a>logstash的数据库类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1. Input插件</span><br><span class="line">    权威指南:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;logstash&#x2F;current&#x2F;input-plugins.html</span><br><span class="line">    </span><br><span class="line">    file插件的使用</span><br><span class="line">    # vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;elk.conf</span><br><span class="line"></span><br><span class="line">    添加如下配置</span><br><span class="line">   	input &#123;</span><br><span class="line">		file &#123;</span><br><span class="line">		    path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;messages&quot;</span><br><span class="line">		    type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">		    start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">		    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	output &#123;    </span><br><span class="line">	         elasticsearch &#123;</span><br><span class="line">	                hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">	                index &#x3D;&gt; &quot;system-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">		        &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">运行logstash指定elk.conf配置文件，进行过滤匹配</span><br><span class="line">#logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;elk.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170916775-655571206.png" alt="img"></p>
+<p>来一发配置安全日志的并且把日志的索引按类型做存放，继续编辑elk.conf文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"># vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;elk.conf</span><br><span class="line"></span><br><span class="line">添加secure日志的路径</span><br><span class="line">input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;messages&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;secure&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;secure&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;system&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-system-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;secure&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-secure-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">运行logstash指定elk.conf配置文件，进行过滤匹配</span><br><span class="line"># logstash -f .&#x2F;elk.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170928228-1645137078.png" alt="img"></p>
+<p>这些设置都没有问题之后，接下来安装下kibana，可以让在前台展示</p>
+<h2 id="Kibana的安装及使用"><a href="#Kibana的安装及使用" class="headerlink" title="Kibana的安装及使用"></a>Kibana的安装及使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">安装kibana环境</span><br><span class="line"></span><br><span class="line">官方安装手册:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;kibana&#x2F;current&#x2F;install.html</span><br><span class="line"></span><br><span class="line">下载kibana的tar.gz的软件包</span><br><span class="line"># wget https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;downloads&#x2F;kibana&#x2F;kibana-5.4.0-linux-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line">解压kibana的tar包</span><br><span class="line"># tar -xzf kibana-5.4.0-linux-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line">进入解压好的kibana</span><br><span class="line"># mv kibana-5.4.0-linux-x86_64 &#x2F;usr&#x2F;local</span><br><span class="line"></span><br><span class="line">创建kibana的软连接</span><br><span class="line"># ln -s &#x2F;usr&#x2F;local&#x2F;kibana-5.4.0-linux-x86_64&#x2F; &#x2F;usr&#x2F;local&#x2F;kibana </span><br><span class="line"></span><br><span class="line">编辑kibana的配置文件</span><br><span class="line"># vim &#x2F;usr&#x2F;local&#x2F;kibana&#x2F;config&#x2F;kibana.yml</span><br><span class="line"></span><br><span class="line">修改配置文件如下，开启以下的配置</span><br><span class="line">server.port: 5601</span><br><span class="line"></span><br><span class="line">server.host: &quot;0.0.0.0&quot;</span><br><span class="line"></span><br><span class="line">elasticsearch.url: &quot;http:&#x2F;&#x2F;192.168.1.202:9200&quot;</span><br><span class="line"></span><br><span class="line">kibana.index: &quot;.kibana&quot; </span><br><span class="line"></span><br><span class="line">安装screen,以便于kibana在后台运行（当然也可以不用安装，用其他方式进行后台启动）</span><br><span class="line"># yum -y install screen</span><br><span class="line"></span><br><span class="line"># screen</span><br><span class="line"></span><br><span class="line"># &#x2F;usr&#x2F;local&#x2F;kibana&#x2F;bin&#x2F;kibana</span><br><span class="line">netstat -antp |grep 5601</span><br><span class="line">tcp        0      0 0.0.0.0:5601                0.0.0.0:*                   LISTEN      17007&#x2F;node </span><br><span class="line"></span><br><span class="line">打开浏览器并设置对应的index</span><br><span class="line">http:&#x2F;&#x2F;IP:5601</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170938400-1045833173.png" alt="img"></p>
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170944103-1284157218.png" alt="img"></p>
+<h1 id="二、ELK实战篇"><a href="#二、ELK实战篇" class="headerlink" title="二、ELK实战篇"></a>二、ELK实战篇</h1><p>好，现在索引也可以创建了，现在可以来输出nginx、apache、message、secrue的日志到前台展示（Nginx有的话直接修改，没有自行安装）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">编辑nginx配置文件，修改以下内容（在http模块下添加）</span><br><span class="line"></span><br><span class="line">log_format json &#39;&#123;&quot;@timestamp&quot;:&quot;$time_iso8601&quot;,&#39;</span><br><span class="line">             &#39;&quot;@version&quot;:&quot;1&quot;,&#39;</span><br><span class="line">             &#39;&quot;client&quot;:&quot;$remote_addr&quot;,&#39;</span><br><span class="line">             &#39;&quot;url&quot;:&quot;$uri&quot;,&#39;</span><br><span class="line">             &#39;&quot;status&quot;:&quot;$status&quot;,&#39;</span><br><span class="line">             &#39;&quot;domian&quot;:&quot;$host&quot;,&#39;</span><br><span class="line">             &#39;&quot;host&quot;:&quot;$server_addr&quot;,&#39;</span><br><span class="line">             &#39;&quot;size&quot;:&quot;$body_bytes_sent&quot;,&#39;</span><br><span class="line">             &#39;&quot;responsetime&quot;:&quot;$request_time&quot;,&#39;</span><br><span class="line">             &#39;&quot;referer&quot;:&quot;$http_referer&quot;,&#39;</span><br><span class="line">             &#39;&quot;ua&quot;:&quot;$http_user_agent&quot;&#39;</span><br><span class="line">          &#39;&#125;&#39;;</span><br><span class="line"></span><br><span class="line">修改access_log的输出格式为刚才定义的json	</span><br><span class="line">access_log  logs&#x2F;elk.access.log  json;</span><br><span class="line"></span><br><span class="line">继续修改apache的配置文件</span><br><span class="line"></span><br><span class="line">LogFormat &quot;&#123; \</span><br><span class="line">        \&quot;@timestamp\&quot;: \&quot;%&#123;%Y-%m-%dT%H:%M:%S%z&#125;t\&quot;, \</span><br><span class="line">        \&quot;@version\&quot;: \&quot;1\&quot;, \</span><br><span class="line">        \&quot;tags\&quot;:[\&quot;apache\&quot;], \</span><br><span class="line">        \&quot;message\&quot;: \&quot;%h %l %u %t \\\&quot;%r\\\&quot; %&gt;s %b\&quot;, \</span><br><span class="line">        \&quot;clientip\&quot;: \&quot;%a\&quot;, \</span><br><span class="line">        \&quot;duration\&quot;: %D, \</span><br><span class="line">        \&quot;status\&quot;: %&gt;s, \</span><br><span class="line">        \&quot;request\&quot;: \&quot;%U%q\&quot;, \</span><br><span class="line">        \&quot;urlpath\&quot;: \&quot;%U\&quot;, \</span><br><span class="line">        \&quot;urlquery\&quot;: \&quot;%q\&quot;, \</span><br><span class="line">        \&quot;bytes\&quot;: %B, \</span><br><span class="line">        \&quot;method\&quot;: \&quot;%m\&quot;, \</span><br><span class="line">        \&quot;site\&quot;: \&quot;%&#123;Host&#125;i\&quot;, \</span><br><span class="line">        \&quot;referer\&quot;: \&quot;%&#123;Referer&#125;i\&quot;, \</span><br><span class="line">        \&quot;useragent\&quot;: \&quot;%&#123;User-agent&#125;i\&quot; \</span><br><span class="line">       &#125;&quot; ls_apache_json</span><br><span class="line"></span><br><span class="line">一样修改输出格式为上面定义的json格式</span><br><span class="line">CustomLog logs&#x2F;access_log ls_apache_json</span><br><span class="line"></span><br><span class="line">编辑logstash配置文件，进行日志收集</span><br><span class="line">vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;full.conf</span><br><span class="line"></span><br><span class="line">	input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;messages&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;secure&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;secure&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access_log&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;http&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;elk.access.log&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;nginx&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">output &#123;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;system&quot; &#123; </span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-system-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;       </span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;secure&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-secure-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;http&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-http-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;nginx&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-nginx-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">运行看看效果如何</span><br><span class="line">logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;full.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171002478-1596125301.png" alt="img"></p>
+<p>可以发现所有创建日志的索引都已存在，接下来就去Kibana创建日志索引，进行展示（按照上面的方法进行创建索引即可），看下展示的效果<br><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171010618-1450100637.png" alt="img"></p>
+<p>接下来再来一发MySQL慢日志的展示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">由于MySQL的慢日志查询格式比较特殊，所以需要用正则进行匹配，并使用multiline能够进行多行匹配（看具体配置）</span><br><span class="line">input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;messages&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;secure&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;secure&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access_log&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;http&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;elk.access.log&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;nginx&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;   </span><br><span class="line">    </span><br><span class="line">    file &#123;</span><br><span class="line">        path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;mysql&#x2F;mysql.slow.log&quot;</span><br><span class="line">        type &#x3D;&gt; &quot;mysql&quot;</span><br><span class="line">        start_position &#x3D;&gt; &quot;beginning&quot;	</span><br><span class="line">	codec &#x3D;&gt; multiline &#123;</span><br><span class="line">        	pattern &#x3D;&gt; &quot;^# User@Host:&quot;</span><br><span class="line">        	negate &#x3D;&gt; true</span><br><span class="line">        	what &#x3D;&gt; &quot;previous&quot;</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">filter &#123;</span><br><span class="line"> </span><br><span class="line">	grok &#123;</span><br><span class="line">		match &#x3D;&gt; &#123; &quot;message&quot; &#x3D;&gt; &quot;SELECT SLEEP&quot; &#125;</span><br><span class="line">    		add_tag &#x3D;&gt; [ &quot;sleep_drop&quot; ]</span><br><span class="line">    		tag_on_failure &#x3D;&gt; []</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">  	if &quot;sleep_drop&quot; in [tags] &#123;</span><br><span class="line">    		drop &#123;&#125;</span><br><span class="line">  	&#125;</span><br><span class="line">    </span><br><span class="line">	grok &#123;</span><br><span class="line">   		match &#x3D;&gt; &#123; &quot;message&quot; &#x3D;&gt; &quot;(?m)^# User@Host: %&#123;USER:User&#125;\[[^\]]+\] @ (?:(?&lt;clienthost&gt;\S*) )?\[(?:%&#123;IP:Client_IP&#125;)?\]\s.*# Query_time: %&#123;NUMBER:Query_Time:float&#125;\s+Lock_time: %&#123;NUMBER:Lock_Time:float&#125;\s+Rows_sent: %&#123;NUMBER:Rows_Sent:int&#125;\s+Rows_examined: %&#123;NUMBER:Rows_Examined:int&#125;\s*(?:use %&#123;DATA:Database&#125;;\s*)?SET timestamp&#x3D;%&#123;NUMBER:timestamp&#125;;\s*(?&lt;Query&gt;(?&lt;Action&gt;\w+)\s+.*)\n# Time:.*$&quot; &#125;</span><br><span class="line">    	&#125;</span><br><span class="line"> </span><br><span class="line"> 	 date &#123;</span><br><span class="line">    		match &#x3D;&gt; [ &quot;timestamp&quot;, &quot;UNIX&quot; ]</span><br><span class="line">    		remove_field &#x3D;&gt; [ &quot;timestamp&quot; ]</span><br><span class="line">  	&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">output &#123;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;system&quot; &#123; </span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-system-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;       </span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;secure&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-secure-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;http&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-http-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;nginx&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-nginx-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;mysql&quot; &#123;</span><br><span class="line"></span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-mysql-slow-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看效果(一条慢日志查询会显示一条，如果不进行正则匹配，那么一行就会显示一条)<br><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171024228-1048856012.png" alt="img"></p>
+<p>具体的日志输出需求，进行具体的分析</p>
+<h1 id="三：ELK终极篇"><a href="#三：ELK终极篇" class="headerlink" title="三：ELK终极篇"></a>三：ELK终极篇</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">安装reids </span><br><span class="line"># yum install -y redis</span><br><span class="line"></span><br><span class="line">修改redis的配置文件</span><br><span class="line"># vim &#x2F;etc&#x2F;redis.conf</span><br><span class="line"></span><br><span class="line">修改内容如下</span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line">bind 192.168.1.202</span><br><span class="line"></span><br><span class="line">启动redis服务</span><br><span class="line"># &#x2F;etc&#x2F;init.d&#x2F;redis restart</span><br><span class="line"></span><br><span class="line">测试redis的是否启用成功</span><br><span class="line"># redis-cli -h 192.168.1.202</span><br><span class="line"></span><br><span class="line">输入info如果有不报错即可</span><br><span class="line">redis 192.168.1.202:6379&gt; info</span><br><span class="line"></span><br><span class="line">redis_version:2.4.10</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">编辑配置redis-out.conf配置文件，把标准输入的数据存储到redis中</span><br><span class="line"># vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br><span class="line"></span><br><span class="line">添加如下内容</span><br><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">            stdin &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line"></span><br><span class="line">        redis &#123;</span><br><span class="line">                host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">                port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">                password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">                db &#x3D;&gt; &#39;1&#39;</span><br><span class="line">                data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">                key &#x3D;&gt; &#39;elk-test&#39;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;   </span><br><span class="line"></span><br><span class="line">运行logstash指定redis-out.conf的配置文件</span><br><span class="line"># &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br></pre></td></tr></table></figure>
+
+<p>运行成功以后，在logstash中输入内容（查看下效果）</p>
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171035540-1353466323.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">编辑配置redis-in.conf配置文件，把reids的存储的数据输出到elasticsearch中</span><br><span class="line"># vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br><span class="line"></span><br><span class="line">添加如下内容</span><br><span class="line">input&#123;</span><br><span class="line">    redis &#123;</span><br><span class="line">                    host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">                    port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">                    password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">                    db &#x3D;&gt; &#39;1&#39;</span><br><span class="line">                    data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">                    key &#x3D;&gt; &#39;elk-test&#39;</span><br><span class="line">                    batch_count &#x3D;&gt; 1 #这个值是指从队列中读取数据时，一次性取出多少条，默认125条（如果redis中没有125条，就会报错，所以在测试期间加上这个值）</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">                hosts &#x3D;&gt; [&#39;192.168.1.202:9200&#39;]</span><br><span class="line">                index &#x3D;&gt; &#39;redis-test-%&#123;+YYYY.MM.dd&#125;&#39;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">运行logstash指定redis-in.conf的配置文件</span><br><span class="line"># &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171045118-662003146.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">把之前的配置文件修改一下，变成所有的日志监控的来源文件都存放到redis中，然后通过redis在输出到elasticsearch中</span><br><span class="line"></span><br><span class="line">更改为如下，编辑full.conf</span><br><span class="line">input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">            path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access_log&quot;</span><br><span class="line">            type &#x3D;&gt; &quot;http&quot;</span><br><span class="line">            start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">            path &#x3D;&gt; &quot;&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;elk.access.log&quot;</span><br><span class="line">            type &#x3D;&gt; &quot;nginx&quot;</span><br><span class="line">            start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">            path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;secure&quot;</span><br><span class="line">            type &#x3D;&gt; &quot;secure&quot;</span><br><span class="line">            start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    file &#123;</span><br><span class="line">            path &#x3D;&gt; &quot;&#x2F;var&#x2F;log&#x2F;messages&quot;</span><br><span class="line">            type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">            start_position &#x3D;&gt; &quot;beginning&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;http&quot; &#123;</span><br><span class="line">        redis &#123;</span><br><span class="line">            host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">            password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">            port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">            db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">            data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">            key &#x3D;&gt; &#39;nagios_http&#39; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;nginx&quot; &#123;</span><br><span class="line">        redis &#123;</span><br><span class="line">            host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">            password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">            port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">            db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">            data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">            key &#x3D;&gt; &#39;nagios_nginx&#39; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;secure&quot; &#123;</span><br><span class="line">        redis &#123;</span><br><span class="line">            host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">            password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">            port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">            db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">            data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">            key &#x3D;&gt; &#39;nagios_secure&#39; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;system&quot; &#123;</span><br><span class="line">        redis &#123;</span><br><span class="line">            host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">            password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">            port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">            db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">            data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">            key &#x3D;&gt; &#39;nagios_system&#39; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">运行logstash指定shipper.conf的配置文件</span><br><span class="line"># &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;full.conf</span><br><span class="line"></span><br><span class="line">在redis中查看是否已经将数据写到里面(有时候输入的日志文件不产生日志，会导致redis里面也没有写入日志)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171059712-519877548.png" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">把redis中的数据读取出来，写入到elasticsearch中(需要另外一台主机做实验)</span><br><span class="line"></span><br><span class="line">编辑配置文件</span><br><span class="line"># vim &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br><span class="line"></span><br><span class="line">添加如下内容</span><br><span class="line">input &#123;</span><br><span class="line">    redis &#123;</span><br><span class="line">        type &#x3D;&gt; &quot;system&quot;</span><br><span class="line">        host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">        password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">        port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">        db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">        data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">        key &#x3D;&gt; &#39;nagios_system&#39; </span><br><span class="line">	batch_count &#x3D;&gt; 1</span><br><span class="line">     &#125;</span><br><span class="line">    </span><br><span class="line">    redis &#123;</span><br><span class="line">        type &#x3D;&gt; &quot;http&quot;</span><br><span class="line">        host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">        password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">        port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">        db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">        data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">        key &#x3D;&gt; &#39;nagios_http&#39; </span><br><span class="line">	batch_count &#x3D;&gt; 1</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    redis &#123;</span><br><span class="line">        type &#x3D;&gt; &quot;nginx&quot;</span><br><span class="line">        host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">        password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">        port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">        db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">        data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">        key &#x3D;&gt; &#39;nagios_nginx&#39;</span><br><span class="line">	batch_count &#x3D;&gt; 1</span><br><span class="line">     &#125;</span><br><span class="line">    </span><br><span class="line">    redis &#123;</span><br><span class="line">        type &#x3D;&gt; &quot;secure&quot;</span><br><span class="line">        host &#x3D;&gt; &quot;192.168.1.202&quot;</span><br><span class="line">        password &#x3D;&gt; &#39;test&#39;</span><br><span class="line">        port &#x3D;&gt; &quot;6379&quot;</span><br><span class="line">        db &#x3D;&gt; &quot;6&quot;</span><br><span class="line">        data_type &#x3D;&gt; &quot;list&quot;</span><br><span class="line">        key &#x3D;&gt; &#39;nagios_secure&#39; </span><br><span class="line">	batch_count &#x3D;&gt; 1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">output &#123;</span><br><span class="line">    </span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;system&quot; &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-system-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;http&quot; &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-http-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;nginx&quot; &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-nginx-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    if [type] &#x3D;&#x3D; &quot;secure&quot; &#123;</span><br><span class="line">        elasticsearch &#123;</span><br><span class="line">            hosts &#x3D;&gt; [&quot;192.168.1.202:9200&quot;]</span><br><span class="line">            index &#x3D;&gt; &quot;nagios-secure-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">        &#125;   </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意:</span><br><span class="line">input是从客户端收集的</span><br><span class="line">output是同样也保存到192.168.1.202中的elasticsearch中，如果要保存到当前的主机上，可以把output中的hosts修改成localhost，如果还需要在kibana中显示，需要在本机上部署kabana，为何要这样做，起到一个松耦合的目的</span><br><span class="line">说白了，就是在客户端收集日志，写到服务端的redis里或是本地的redis里面，输出的时候对接ES服务器即可</span><br><span class="line"></span><br><span class="line">运行命令看看效果</span><br><span class="line"># &#x2F;usr&#x2F;share&#x2F;logstash&#x2F;bin&#x2F;logstash -f &#x2F;etc&#x2F;logstash&#x2F;conf.d&#x2F;redis-out.conf</span><br></pre></td></tr></table></figure>
+
+<p>效果是和直接往ES服务器输出一样的（这样是先将日志存到redis数据库，然后再从redis数据库里取出日志）<br><img src="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615171108993-934738573.png" alt="img"></p>
+<h2 id="上线ELK"><a href="#上线ELK" class="headerlink" title="上线ELK"></a>上线ELK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">１.　日志分类</span><br><span class="line">        系统日志        rsyslog     logstash    syslog插件</span><br><span class="line">        访问日志        nginx       logstash    codec   json</span><br><span class="line">        错误日志        file        logstash    mulitline</span><br><span class="line">        运行日志        file        logstash    codec   json</span><br><span class="line">        设备日志        syslog      logstash    syslog插件</span><br><span class="line">        Debug日志      file         logstash   json 或者 mulitline  </span><br><span class="line"></span><br><span class="line">2.  日志标准化</span><br><span class="line">        路径      固定</span><br><span class="line">        格式      尽量json</span><br><span class="line"></span><br><span class="line">3.   系统个日志开始--&gt;错误日志--&gt;运行日志--&gt;访问日志</span><br></pre></td></tr></table></figure>
+
+<p>因为ES保存日志是永久保存，所以需要定期删除一下日志，下面命令为删除指定时间前的日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X DELETE http:&#x2F;&#x2F;xx.xx.com:9200&#x2F;logstash-*-&#96;date +%Y-%m-%d -d &quot;-$n days&quot;&#96;</span><br></pre></td></tr></table></figure>
+
+<p>技术交流群：190655608</p>
+<p>标签: <a href="https://www.cnblogs.com/yuhuLin/tag/ELK%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B%E7%AC%94%E8%AE%B0/" target="_blank" rel="noopener">ELK学习过程笔记</a></p>
+<p><a href="javascript:void(0);">好文要顶</a> <a href="javascript:void(0);">关注我</a> <a href="javascript:void(0);">收藏该文</a> <a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/icon_weibo_24.png" alt="img"></a> <a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/wechat.png" alt="img"></a></p>
+<p><a href="https://home.cnblogs.com/u/yuhuLin/" target="_blank" rel="noopener"><img src="https://pic.cnblogs.com/face/1181869/20170616142315.png" alt="img"></a></p>
+<p><a href="https://home.cnblogs.com/u/yuhuLin/" target="_blank" rel="noopener">于老三</a><br><a href="https://home.cnblogs.com/u/yuhuLin/followees/" target="_blank" rel="noopener">关注 - 0</a><br><a href="https://home.cnblogs.com/u/yuhuLin/followers/" target="_blank" rel="noopener">粉丝 - 34</a></p>
+<p><a href="javascript:void(0);">+加关注</a></p>
+<p>25</p>
+<p>1</p>
+<p><a href="https://www.cnblogs.com/yuhuLin/p/7025846.html" target="_blank" rel="noopener">» </a>下一篇： <a href="https://www.cnblogs.com/yuhuLin/p/7025846.html" target="_blank" rel="noopener">Centos6.5下搭建nagios详解</a></p>
+<p>posted @ 2017-06-15 17:07 <a href="https://www.cnblogs.com/yuhuLin/" target="_blank" rel="noopener">于老三</a> 阅读(81641) 评论(7) <a href="https://i.cnblogs.com/EditPosts.aspx?postid=7018858" target="_blank" rel="noopener">编辑</a> <a href="javascript:void(0)">收藏</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/25/100005/" rel="prev" title="git代码提交规范">
+      <i class="fa fa-chevron-left"></i> git代码提交规范
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/26/100007/" rel="next" title="熟悉vue框架的 keep-alive 组件">
+      熟悉vue框架的 keep-alive 组件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速搭建ELK日志分析系统"><span class="nav-number">1.</span> <span class="nav-text">快速搭建ELK日志分析系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、ELK搭建篇"><span class="nav-number">2.</span> <span class="nav-text">一、ELK搭建篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装elasticsearch的环境"><span class="nav-number">2.3.</span> <span class="nav-text">安装elasticsearch的环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.4.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何和elasticsearch交互"><span class="nav-number">2.5.</span> <span class="nav-text">如何和elasticsearch交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">2.6.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LogStash的使用"><span class="nav-number">2.7.</span> <span class="nav-text">LogStash的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash使用配置文件"><span class="nav-number">2.8.</span> <span class="nav-text">logstash使用配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash的数据库类型"><span class="nav-number">2.9.</span> <span class="nav-text">logstash的数据库类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kibana的安装及使用"><span class="nav-number">2.10.</span> <span class="nav-text">Kibana的安装及使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、ELK实战篇"><span class="nav-number">3.</span> <span class="nav-text">二、ELK实战篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三：ELK终极篇"><span class="nav-number">4.</span> <span class="nav-text">三：ELK终极篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上线ELK"><span class="nav-number">4.1.</span> <span class="nav-text">上线ELK</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weely.cc</p>
+  <div class="site-description" itemprop="description">黎人过客的小站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weely.cc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

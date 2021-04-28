@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Markdown是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。Markdown 的语法十分简单，常用的标记符号也不超过十个，学习成本也不需要太多，熟悉后基本一劳永逸。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown语法简介">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/22/100001/index.html">
+<meta property="og:site_name" content="黎人过客">
+<meta property="og:description" content="Markdown是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。Markdown 的语法十分简单，常用的标记符号也不超过十个，学习成本也不需要太多，熟悉后基本一劳永逸。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/10/02/T4hqnLOWD5IJ1zo.png">
+<meta property="article:published_time" content="2021-04-22T14:27:55.740Z">
+<meta property="article:modified_time" content="2021-04-28T16:40:31.308Z">
+<meta property="article:author" content="Weely.cc">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/10/02/T4hqnLOWD5IJ1zo.png">
+
+<link rel="canonical" href="http://blog.weely.cc/2021/04/22/100001/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Markdown语法简介 | 黎人过客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">黎人过客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">好记性不如烂笔头</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/22/100001/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="黎人过客的小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Markdown语法简介
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-22 22:27:55" itemprop="dateCreated datePublished" datetime="2021-04-22T22:27:55+08:00">2021-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-29 00:40:31" itemprop="dateModified" datetime="2021-04-29T00:40:31+08:00">2021-04-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Markdown是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。Markdown 的语法十分简单，常用的标记符号也不超过十个，学习成本也不需要太多，熟悉后基本一劳永逸。</p>
+<a id="more"></a>
+
+<h1 id="Markdown语法简介"><a href="#Markdown语法简介" class="headerlink" title="Markdown语法简介"></a>Markdown语法简介</h1><h2 id="一、标题"><a href="#一、标题" class="headerlink" title="一、标题"></a>一、标题</h2><p><em><strong>语法：</strong></em><br>在需要设置为标题的文字前加上“#”即可（提示：文字与井号“#”之前需要空格隔开）。<br>一个“#”为一级标题，二个“#”为二级标题，以此类推。支持六级标题。</p>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 这是一级标题</span><br><span class="line">## 这是二级标题</span><br><span class="line">### 这是三级标题</span><br><span class="line">#### 这是四级标题</span><br><span class="line">##### 这是五级标题</span><br><span class="line">###### 这是六级标题</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>效果示意：</strong></em></p>
+<h1 id="这是一级标题"><a href="#这是一级标题" class="headerlink" title="这是一级标题"></a>这是一级标题</h1><h2 id="这是二级标题"><a href="#这是二级标题" class="headerlink" title="这是二级标题"></a>这是二级标题</h2><h3 id="这是三级标题"><a href="#这是三级标题" class="headerlink" title="这是三级标题"></a>这是三级标题</h3><h4 id="这是四级标题"><a href="#这是四级标题" class="headerlink" title="这是四级标题"></a>这是四级标题</h4><h5 id="这是五级标题"><a href="#这是五级标题" class="headerlink" title="这是五级标题"></a>这是五级标题</h5><h6 id="这是六级标题"><a href="#这是六级标题" class="headerlink" title="这是六级标题"></a>这是六级标题</h6><h2 id="二、字体"><a href="#二、字体" class="headerlink" title="二、字体"></a>二、字体</h2><p><em><strong>语法：</strong></em></p>
+<ul>
+<li>斜体：需要倾斜的文字前后分别使用一个“*”包起来</li>
+<li>加粗：需要加粗文字前后使用两个“*”包起来</li>
+<li>斜体加粗：需要倾斜的文字前后分别使用三个“*”包起来</li>
+<li>删除线：需要加删除线的文字前后分别用两个“~~”包起来</li>
+</ul>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*这是倾斜的文字*&#96;</span><br><span class="line">**这是加粗的文字**</span><br><span class="line">***这是斜体加粗的文字***</span><br><span class="line">~~这是加删除线的文字~~</span><br></pre></td></tr></table></figure>
+<p><em><strong>效果示意：</strong></em><br><em>这是倾斜的文字</em>`<br><strong>这是加粗的文字</strong><br><em><strong>这是斜体加粗的文字</strong></em><br><del>这是加删除线的文字</del></p>
+<h2 id="三、分割线"><a href="#三、分割线" class="headerlink" title="三、分割线"></a>三、分割线</h2><p><em><strong>语法：</strong></em><br>三个三个以上的“-”或“*”均可</p>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">----</span><br><span class="line">***</span><br><span class="line">*****</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>效果示意：</strong></em></p>
+<hr>
+<hr>
+<hr>
+<hr>
+<h2 id="四、引用"><a href="#四、引用" class="headerlink" title="四、引用"></a>四、引用</h2><p><em><strong>语法：</strong></em><br>在引用文字钱加“&lt;”即可。引用也可嵌套，如加两个“&lt;&lt;”、三个“&lt;&lt;&lt;”、n个…等等</p>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;这是引用的内容</span><br><span class="line">&gt;&gt;这是引用的内容</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;这是引用的内容</span><br></pre></td></tr></table></figure>
+<p><em><strong>效果示意：</strong></em></p>
+<blockquote>
+<p>这是引用的内容</p>
+<blockquote>
+<p>这是引用的内容</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>这是引用的内容</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="五、列表"><a href="#五、列表" class="headerlink" title="五、列表"></a>五、列表</h2><p><em><strong>语法：</strong></em></p>
+<ul>
+<li>有序列表：数字加“.”</li>
+<li>无序列表：“- + *”中的任一中符号均可</li>
+<li>嵌套列表：上级与下级间通过tab缩进即可</li>
+</ul>
+<p>注意：序号跟内容之间都要有一个空格</p>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 有序列表</span><br><span class="line">1. 列表内容</span><br><span class="line">2. 列表内容</span><br><span class="line">3. 列表内容</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 无序列表</span><br><span class="line">- 列表内容</span><br><span class="line">+ 列表内容</span><br><span class="line">* 列表内容</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 嵌套列表</span><br><span class="line">1. 列表内容</span><br><span class="line">    1. 列表内容</span><br><span class="line">    2. 列表内容</span><br><span class="line">    3. 列表内容</span><br><span class="line">2. 列表内容</span><br><span class="line">    - 列表内容</span><br><span class="line">    + 列表内容</span><br><span class="line">    * 列表内容</span><br><span class="line">3. 列表内容</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>效果示意：</strong></em><br>有序列表</p>
+<ol>
+<li>列表内容</li>
+<li>列表内容</li>
+<li>列表内容</li>
+</ol>
+<p>无序列表</p>
+<ul>
+<li>列表内容</li>
+</ul>
+<ul>
+<li>列表内容</li>
+</ul>
+<ul>
+<li>列表内容</li>
+</ul>
+<p>嵌套列表</p>
+<ol>
+<li>列表内容<ol>
+<li>列表内容</li>
+<li>列表内容</li>
+<li>列表内容</li>
+</ol>
+</li>
+<li>列表内容<ul>
+<li>列表内容</li>
+</ul>
+<ul>
+<li>列表内容</li>
+</ul>
+<ul>
+<li>列表内容</li>
+</ul>
+</li>
+<li>列表内容</li>
+</ol>
+<h2 id="六、图片与超链接"><a href="#六、图片与超链接" class="headerlink" title="六、图片与超链接"></a>六、图片与超链接</h2><p><em><strong>语法：</strong></em></p>
+<ul>
+<li><p>图片：<code>![图片alt](图片地址 &quot;图片title&quot;)</code><br>图片alt指显示在图片下的文字<br>图片title即图片标题，title可选</p>
+</li>
+<li><p>超链接：<code>[超链接名](超链接地址 &quot;超链接title&quot;)</code><br>链接的title一样为可选的</p>
+</li>
+</ul>
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 图片示例</span><br><span class="line">![sakura](https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;10&#x2F;02&#x2F;T4hqnLOWD5IJ1zo.png &quot;sakura&quot;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 超链接示例</span><br><span class="line">[百度](http:&#x2F;&#x2F;baidu.com)</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>效果示意：</strong></em></p>
+<p>图片示例：<br><img src="https://i.loli.net/2020/10/02/T4hqnLOWD5IJ1zo.png" alt="sakura" title="sakura"></p>
+<p>超链接示例：<br><a href="http://baidu.com/" target="_blank" rel="noopener">百度</a></p>
+<h2 id="七、表格"><a href="#七、表格" class="headerlink" title="七、表格"></a>七、表格</h2><p><em><strong>语法：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">表头|表头|表头|表头</span><br><span class="line">:---|:--:|---:|---</span><br><span class="line">内容|内容|内容|内容</span><br><span class="line">内容|内容|内容|内容</span><br><span class="line"></span><br><span class="line">第二行分割表头和内容。</span><br><span class="line">- 有一个就行，多加了几个可调整文字对齐</span><br><span class="line">文字默认居左</span><br><span class="line">-两边加：表示文字居中</span><br><span class="line">-右边加：表示文字居右</span><br><span class="line">注：原生的语法两边都要用 | 包起来。此处省略</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>示例：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">姓名|语文|数学|外语</span><br><span class="line">:---|:--:|---:|---</span><br><span class="line">小明|73|89|12</span><br><span class="line">小黑|22|98|23</span><br><span class="line">小花|89|95|94</span><br><span class="line">张三|56|67|60</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>效果示意：</strong></em></p>
+<table>
+<thead>
+<tr>
+<th align="left">姓名</th>
+<th align="center">语文</th>
+<th align="right">数学</th>
+<th>外语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">小明</td>
+<td align="center">73</td>
+<td align="right">89</td>
+<td>12</td>
+</tr>
+<tr>
+<td align="left">小黑</td>
+<td align="center">22</td>
+<td align="right">98</td>
+<td>23</td>
+</tr>
+<tr>
+<td align="left">小花</td>
+<td align="center">89</td>
+<td align="right">95</td>
+<td>94</td>
+</tr>
+<tr>
+<td align="left">张三</td>
+<td align="center">56</td>
+<td align="right">67</td>
+<td>60</td>
+</tr>
+</tbody></table>
+<h2 id="八、代码"><a href="#八、代码" class="headerlink" title="八、代码"></a>八、代码</h2><p><em><strong>语法：</strong></em></p>
+<ul>
+<li><p>单行代码：单行代码用一个反引号“`”括起来即可<br>`代码内容`</p>
+</li>
+<li><p>多行代码(代码块)：多行代码用三个反引号括起来，推荐反引号开始与结束块单独占一行<br>```<br>  代码块<br>```</p>
+</li>
+</ul>
+<p><em><strong>效果示意：</strong></em><br>单行代码：<br><code>console.log(&#39;hello world&#39;);</code><br>代码块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(&quot;hello world&quot;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、流程图"><a href="#九、流程图" class="headerlink" title="九、流程图"></a>九、流程图</h2><p><em><strong>语法：</strong></em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始</span><br><span class="line">op&#x3D;&gt;operation: My Operation</span><br><span class="line">cond&#x3D;&gt;condition: Yes or No?</span><br><span class="line">e&#x3D;&gt;end</span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;e</span><br><span class="line">cond(no)-&gt;op</span><br><span class="line">&amp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="十、转义"><a href="#十、转义" class="headerlink" title="十、转义"></a>十、转义</h2><p><em><strong>语法：</strong></em><br>markdown的转义使用单个反斜杠“\”符号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">\   反斜线</span><br><span class="line">&#96;   反引号</span><br><span class="line">*   星号</span><br><span class="line">_   下划线</span><br><span class="line">&#123;&#125;  花括号</span><br><span class="line">[]  方括号</span><br><span class="line">()  小括号</span><br><span class="line">#   井字号</span><br><span class="line">+   加号</span><br><span class="line">-   减号</span><br><span class="line">.   英文句点</span><br><span class="line">!   感叹号</span><br></pre></td></tr></table></figure>
+
+<h2 id="十、公式"><a href="#十、公式" class="headerlink" title="十、公式"></a>十、公式</h2><p>markdown在编辑器中插入数学公式时，可使用两美元符号$$包含Tex或LaTex格式的数学公式来实现，需要编译器支持才能渲染<br>***语法: ***<br>$$<br>\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}<br>\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \<br>\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \<br>\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \<br>\end{vmatrix}<br>${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}<br>$$</p>
+<p>参考链接：<br><a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener">https://www.jianshu.com/p/191d1e21f7ed</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/markdown/md-tutorial.html</a><br><a href="https://baike.baidu.com/item/markdown/3245829?fr=aladdin" target="_blank" rel="noopener">https://baike.baidu.com/item/markdown/3245829?fr=aladdin</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/01/100000/" rel="prev" title="hexo + github搭建个人博客">
+      <i class="fa fa-chevron-left"></i> hexo + github搭建个人博客
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/24/100002/" rel="next" title="vue数据双向绑定原理">
+      vue数据双向绑定原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Markdown语法简介"><span class="nav-number">1.</span> <span class="nav-text">Markdown语法简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、标题"><span class="nav-number">1.1.</span> <span class="nav-text">一、标题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#这是一级标题"><span class="nav-number">2.</span> <span class="nav-text">这是一级标题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#这是二级标题"><span class="nav-number">2.1.</span> <span class="nav-text">这是二级标题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#这是三级标题"><span class="nav-number">2.1.1.</span> <span class="nav-text">这是三级标题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#这是四级标题"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">这是四级标题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#这是五级标题"><span class="nav-number">2.1.1.1.1.</span> <span class="nav-text">这是五级标题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#这是六级标题"><span class="nav-number">2.1.1.1.1.1.</span> <span class="nav-text">这是六级标题</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、字体"><span class="nav-number">2.2.</span> <span class="nav-text">二、字体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、分割线"><span class="nav-number">2.3.</span> <span class="nav-text">三、分割线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、引用"><span class="nav-number">2.4.</span> <span class="nav-text">四、引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、列表"><span class="nav-number">2.5.</span> <span class="nav-text">五、列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、图片与超链接"><span class="nav-number">2.6.</span> <span class="nav-text">六、图片与超链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、表格"><span class="nav-number">2.7.</span> <span class="nav-text">七、表格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、代码"><span class="nav-number">2.8.</span> <span class="nav-text">八、代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、流程图"><span class="nav-number">2.9.</span> <span class="nav-text">九、流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、转义"><span class="nav-number">2.10.</span> <span class="nav-text">十、转义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、公式"><span class="nav-number">2.11.</span> <span class="nav-text">十、公式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weely.cc</p>
+  <div class="site-description" itemprop="description">黎人过客的小站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weely.cc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="vue项目性能优化前言我们使用vue框架能快速、方便的开发单页面应用，但开发的项目中也会存在一些问题，如首屏白屏时间过长，加载包过多打包太久等等问题。本文针对这些问题，通过总结以往项目经验及参考部分文档做的一些总结，总结内容由三部分组成：  Vue框架代码层面的优化 webpack(或vue-cli)打包配置层面的优化 web技术层面的优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue项目性能优化">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/28/100009/index.html">
+<meta property="og:site_name" content="黎人过客">
+<meta property="og:description" content="vue项目性能优化前言我们使用vue框架能快速、方便的开发单页面应用，但开发的项目中也会存在一些问题，如首屏白屏时间过长，加载包过多打包太久等等问题。本文针对这些问题，通过总结以往项目经验及参考部分文档做的一些总结，总结内容由三部分组成：  Vue框架代码层面的优化 webpack(或vue-cli)打包配置层面的优化 web技术层面的优化">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-28T12:07:40.314Z">
+<meta property="article:modified_time" content="2021-04-28T14:28:46.918Z">
+<meta property="article:author" content="Weely.cc">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.weely.cc/2021/04/28/100009/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>vue项目性能优化 | 黎人过客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">黎人过客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">好记性不如烂笔头</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/28/100009/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="黎人过客的小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vue项目性能优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-28 20:07:40 / 修改时间：22:28:46" itemprop="dateCreated datePublished" datetime="2021-04-28T20:07:40+08:00">2021-04-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="vue项目性能优化"><a href="#vue项目性能优化" class="headerlink" title="vue项目性能优化"></a>vue项目性能优化</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们使用vue框架能快速、方便的开发单页面应用，但开发的项目中也会存在一些问题，如首屏白屏时间过长，加载包过多打包太久等等问题。本文针对这些问题，通过总结以往项目经验及参考部分文档做的一些总结，总结内容由三部分组成：</p>
+<ul>
+<li>Vue框架代码层面的优化</li>
+<li>webpack(或vue-cli)打包配置层面的优化</li>
+<li>web技术层面的优化</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="一、Vue框架代码层面的优化"><a href="#一、Vue框架代码层面的优化" class="headerlink" title="一、Vue框架代码层面的优化"></a>一、Vue框架代码层面的优化</h2><h3 id="1-1-路由、组件懒加载"><a href="#1-1-路由、组件懒加载" class="headerlink" title="1.1 路由、组件懒加载"></a>1.1 路由、组件懒加载</h3><p>针对单页面应用，项目一般可能有很多的路由引用，若路由组件直接打包，会是webpack打包后文件很大，影响进入首页速率，导致白屏时间过长，不利于用户体验。因此，路由懒加载是必须的，路由懒加载很简单，只需要调整组件引入方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; import方式：(推荐)</span><br><span class="line"> const Foo &#x3D; () &#x3D;&gt; import(&#39;.&#x2F;Foo.vue&#39;)</span><br><span class="line"> const router &#x3D; new VueRouter(&#123;</span><br><span class="line">   routes: [</span><br><span class="line">     &#123; path: &#39;.&#x2F;foo&#39;, component: Foo &#125;</span><br><span class="line">   ]</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; require方式：</span><br><span class="line"> const Foo &#x3D; resolve&#x3D;&gt;&#123;require([&#39;.&#x2F;Foo.vue&#39;],resolve&#125;</span><br><span class="line"> const router &#x3D; new VueRouter(&#123;</span><br><span class="line">   routes: [</span><br><span class="line">     &#123; path: &#39;.&#x2F;foo&#39;, component: Foo &#125;</span><br><span class="line">   ]</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-图片懒加载"><a href="#1-2-图片懒加载" class="headerlink" title="1.2 图片懒加载"></a>1.2 图片懒加载</h3><p>针对图片资源过多的页面，为了加快页面加载速度，图片使用懒加载方式是有必要的。针对图片懒加载具体原理，简要说明就是图片未在可视区时，暂时不加载，将图片资源放置在data-url自定义的属性中，src设置未空，待页面滑动到图片可视区位置，在去data-url值赋值给src，使图片正常显示处理即可。</p>
+<p>vue实现图片懒加载，推荐使用vue-lazyload插件。</p>
+<ul>
+<li>安装：<code>npm install vue-lazyload</code></li>
+<li>main入口文件中全局引入：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import VueLazyload from &#39;vue-lazyload&#39;</span><br><span class="line">&#x2F;&#x2F; &#123;&#125;可添加自定义参数,</span><br><span class="line">Vue.use(VueLazyload, &#123;</span><br><span class="line">	preload: 1.3,</span><br><span class="line">    error: &#39;@&#x2F;assets&#x2F;images&#x2F;error.png&#39;,</span><br><span class="line">    loading: &#39;@&#x2F;assets&#x2F;images&#x2F;error.gif&#39;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li>使用：在组件中将img标签改成v-lazy<br><code>&lt;img v-lazy=&quot;./static/img/test.png&quot;&gt;</code></li>
+</ul>
+<p>vue-lazyload详细使用说明见：<a href="https://github.com/hilongjw/vue-lazyload" target="_blank" rel="noopener">https://github.com/hilongjw/vue-lazyload</a></p>
+<h3 id="1-3-v-if与v-show区分使用场景"><a href="#1-3-v-if与v-show区分使用场景" class="headerlink" title="1.3 v-if与v-show区分使用场景"></a>1.3 v-if与v-show区分使用场景</h3><p>v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。值为false相当于display: none。</p>
+<p>v-if 也是<em><strong>惰性的</strong></em>：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。</p>
+<p>一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。</p>
+<p>针对页面子组件太多的情况，切换比较少的组件推荐使用v-if，减少页面进入时需要渲染太多子组件而时白屏时间过长。</p>
+<h3 id="1-4-v-for必须配置key，且避免与v-if同时使用"><a href="#1-4-v-for必须配置key，且避免与v-if同时使用" class="headerlink" title="1.4 v-for必须配置key，且避免与v-if同时使用"></a>1.4 v-for必须配置key，且避免与v-if同时使用</h3><ol>
+<li>v-for配置key<br>建议尽可能在使用<code>v-for</code>时提供<code>key</code>，除非遍历输出的 DOM 内容非常简单，或者是刻意依赖默认行为以获取性能上的提升。</li>
+</ol>
+<p>如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除 key 不存在的元素。</p>
+<p>有相同父元素的子元素必须有独特的 key。重复的 key 会造成渲染错误</p>
+<ol start="2">
+<li>v-for避免与v-if同时使用<br>同一节点v-for 的优先级比 v-if 更高,如果两者同时使用，这将会影响性能，因为如果列表即使只有一小部分满足条件，vue也得每次重渲染的时候遍历整个列表。<br>推荐将原数组或对象更换为计算属性。<br>这样的好处：</li>
+</ol>
+<ul>
+<li>过滤后的列表只会在 users 数组发生相关变化时才被重新运算，过滤更高效。</li>
+<li>使用 v-for=”user in activeUsers” 之后，我们在渲染的时候只遍历活跃用户，渲染更高效。</li>
+<li>解耦渲染层的逻辑，可维护性 (对逻辑的更改和扩展) 更强。<br>好例子：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; js</span><br><span class="line">computed: &#123;</span><br><span class="line">   activeUsers: function () &#123;</span><br><span class="line">     return this.users.filter(function (user) &#123;</span><br><span class="line">       return user.isActive</span><br><span class="line">     &#125;)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; html</span><br><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-for&#x3D;&quot;user in activeUsers&quot;</span><br><span class="line">    :key&#x3D;&quot;user.id&quot;</span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user.name &#125;&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">&lt;&#x2F;ul&gt;</span><br></pre></td></tr></table></figure>
+反例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;li</span><br><span class="line">    v-for&#x3D;&quot;user in users&quot;</span><br><span class="line">    v-if&#x3D;&quot;user.isActive&quot;</span><br><span class="line">    :key&#x3D;&quot;user.id&quot;</span><br><span class="line">  &gt;</span><br><span class="line">    &#123;&#123; user.name &#125;&#125;</span><br><span class="line">  &lt;&#x2F;li&gt;</span><br><span class="line">  &lt;&#x2F;ul&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="1-5-watch与computed区分使用场景"><a href="#1-5-watch与computed区分使用场景" class="headerlink" title="1.5 watch与computed区分使用场景"></a>1.5 watch与computed区分使用场景</h3><p><strong>computed：</strong></p>
+<ol>
+<li>支持缓存，只有依赖数据发生改变，才会重新进行计算</li>
+<li>不支持异步，当computed内有异步操作时无效，无法监听数据的变化</li>
+<li>computed 属性值会默认走缓存，计算属性是基于它们的响应式依赖进行缓存的，也就是基于data中声明过或者父组件传递的props中的数据通过计算得到的值</li>
+<li>如果一个属性是由其他属性计算而来的，这个属性依赖其他属性，是一个多对一或者一对一，一般用computed</li>
+<li>如果computed属性属性值是函数，那么默认会走get方法；函数的返回值就是属性的属性值；在computed中的，属性都有一个get和一个set方法，当数据变化时，调用set方法。</li>
+</ol>
+<p>demo:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">data() &#123;</span><br><span class="line">  firstName: &#39;xiao&#39;,</span><br><span class="line">    lastName: &#39;ming&#39;</span><br><span class="line">&#125;,</span><br><span class="line">conputed: &#123;</span><br><span class="line">  fullName() &#123;</span><br><span class="line">    return this.firstName + &#39; &#39; + this.lastName</span><br><span class="line">  &#125;,</span><br><span class="line">  &#x2F;&#x2F;computed使用参数</span><br><span class="line">  fullName2() &#123;</span><br><span class="line">    return (customerName) &#x3D;&gt; &#123;</span><br><span class="line">      return this.firstName + &#39; &#39; + this.lastName + &#39;customerName&#39;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>watch:</strong></p>
+<ol>
+<li>不支持缓存，数据变，直接会触发相应的操作；</li>
+<li>watch支持异步；</li>
+<li>监听的函数接收两个参数，第一个参数是最新的值；第二个参数是输入之前的值；</li>
+<li>当一个属性发生变化时，需要执行对应的操作；一对多；</li>
+<li>监听数据必须是data中声明过或者父组件传递过来的props中的数据，当数据变化时，触发其他操作，函数有两个参数，</li>
+</ol>
+<ul>
+<li>immediate：组件加载立即触发回调函数执行，</li>
+<li>deep: 深度监听，为了发现对象内部值的变化，复杂类型的数据时使用，例如数组中的对象内容的改变，注意监听数组的变动不需要这么做。注意：deep无法监听到数组的变动和对象的新增，参考vue数组变异,只有以响应式的方式触发才会被监听到</li>
+</ul>
+<h3 id="1-6-监听事件的销毁"><a href="#1-6-监听事件的销毁" class="headerlink" title="1.6 监听事件的销毁"></a>1.6 监听事件的销毁</h3><p>Vue组件销毁时，会自动清理它与其他实列的连接，解绑它的全部指令及自身的事件监听器，而不能销毁js内绑定的监听事件，所以推荐将绑定的事件在组件销毁前销毁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mounted() &#123;</span><br><span class="line">  addEventListener(&#39;click&#39;, this.handleClick)</span><br><span class="line">&#125;,</span><br><span class="line">destoryed() &#123;</span><br><span class="line">  removeEventListener(&#39;click&#39;, this.click)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-合理使用keep-alive组件"><a href="#1-7-合理使用keep-alive组件" class="headerlink" title="1.7 合理使用keep-alive组件"></a>1.7 合理使用keep-alive组件</h3><blockquote>
+<p>官网解释：<keep-alive> 包裹动态组件时，会缓存不活动的组件实例，而不是销毁它们。和 <transition> 相似，<keep-alive> 是一个抽象组件：它自身不会渲染一个 DOM 元素，也不会出现在父组件链中。 当组件在 <keep-alive> 内被切换，它的 activated 和 deactivated 这两个生命周期钩子函数将会被对应执行。 在 2.2.0 及其更高版本中，activated 和 deactivated 将会在 <keep-alive> 树内的所有嵌套组件中触发。 主要用于保留组件状态或避免重新渲染。</p>
+</blockquote>
+<p><em>keep-alive的生命周期</em></p>
+<ul>
+<li>初次进入时：created &gt; mounted &gt; activated；退出后触发 deactivated</li>
+<li>再次进入：会触发 activated；事件挂载的方法等，只执行一次的放在 mounted 中；组件每次进去执行的方法放在 activated 中。</li>
+</ul>
+<p><em>参考知乎链接：<a href="https://zhuanlan.zhihu.com/p/96740001" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/96740001</a></em></p>
+<h3 id="1-8-长列表性能优化"><a href="#1-8-长列表性能优化" class="headerlink" title="1.8 长列表性能优化"></a>1.8 长列表性能优化</h3><ul>
+<li>针对数据不更新的大数据对象或数组，可以使用<code>Object.freeze(obj)</code>方法将对象冻结起来，减少不必要的引用消耗</li>
+<li>如果产品需求需要展示非常长或无限长的列表，可参照<code>vue-virtual-croll-list</code>和<code>vue-virtual-scroller</code>有优化该类场景（原理基本时只渲染可视区范围的dom节点，减少内存的消耗）</li>
+</ul>
+<h3 id="1-9-服务的渲染ssr化或预渲染"><a href="#1-9-服务的渲染ssr化或预渲染" class="headerlink" title="1.9 服务的渲染ssr化或预渲染"></a>1.9 服务的渲染ssr化或预渲染</h3><h2 id="二、webpack打包配置层面的优化"><a href="#二、webpack打包配置层面的优化" class="headerlink" title="二、webpack打包配置层面的优化"></a>二、webpack打包配置层面的优化</h2><h3 id="2-1-第三方组件库按需加载，避免全量全局引入"><a href="#2-1-第三方组件库按需加载，避免全量全局引入" class="headerlink" title="2.1 第三方组件库按需加载，避免全量全局引入"></a>2.1 第三方组件库按需加载，避免全量全局引入</h3><ol>
+<li>查看代码，检查引用的第三方库是否为全局引入，如果只使用一部分功能，考虑按需<br>以element-ui为例：</li>
+<li>首先安装babel-plugin-component:<br><code>npm install babel-plugin-componet --save-dev</code></li>
+<li>调整组件的引入方式。<ul>
+<li>针对lodash.js这类工具库，改原来 <code>import { debounce } from &#39;lodash&#39;</code>引入方式为<code>import debounce from &#39;lodash/debounce&#39;</code>，按需引入</li>
+<li>针对element-ui组件库，原来全局引入方式(具体细节可参照<a href="https://element.eleme.cn/#/zh-CN/component/quickstart" target="_blank" rel="noopener">element-ui官网</a>)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import ElementUI from &#39;element-ui&#39;</span><br><span class="line">Vue.use(ElementUI)</span><br></pre></td></tr></table></figure>
+调整为按需引入，仅引入使用了的组件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Button, Input, Pagination, Table, TableColumn, MessageBox &#125; from &#39;element-ui&#39;;</span><br><span class="line">Vue.use(Button)</span><br><span class="line">Vue.use(Input)</span><br><span class="line">Vue.use(Pagination)</span><br><span class="line">Vue.prototype.$alert &#x3D; MessageBox.alert</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>然后修改.babelr或babel.config.js配置文件：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  presets: [</span><br><span class="line">    &#39;@vue&#x2F;cli-plugin-babel&#x2F;preset&#39;</span><br><span class="line">  ],</span><br><span class="line">  &quot;plugins&quot;: [</span><br><span class="line">    [</span><br><span class="line">      &quot;component&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;libraryName&quot;: &quot;element-ui&quot;,</span><br><span class="line">        &quot;styleLibraryName&quot;: &quot;theme-chalk&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">    &#x2F;&#x2F; 注意：当有多个插件时，需要额外加上第三个参数[&quot;component&quot;, &#123; ... &#125;, &#39;自定义组件名&#39;]</span><br><span class="line">    &#x2F;&#x2F;[</span><br><span class="line">    &#x2F;&#x2F;  &quot;component&quot;,</span><br><span class="line">    &#x2F;&#x2F;&#123;</span><br><span class="line">    &#x2F;&#x2F;    &quot;libraryName&quot;: &quot;ant-ui&quot;,</span><br><span class="line">    &#x2F;&#x2F;    &quot;styleLibraryName&quot;: &quot;theme-chalk&quot;</span><br><span class="line">    &#x2F;&#x2F; &#125;,</span><br><span class="line">    &#x2F;&#x2F;  &#39;ant-ui&#39;</span><br><span class="line">    &#x2F;&#x2F;]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-2-提取公共代码"><a href="#2-2-提取公共代码" class="headerlink" title="2.2 提取公共代码"></a>2.2 提取公共代码</h3><h3 id="2-3-css是否要拆分"><a href="#2-3-css是否要拆分" class="headerlink" title="2.3 css是否要拆分"></a>2.3 css是否要拆分</h3><p>可修改vue.config.js中css配置来确定是否拆分css</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">css: &#123;</span><br><span class="line">   &#x2F;&#x2F; 是否使用css分离插件 ExtractTextPlugin</span><br><span class="line">   extract: false,</span><br><span class="line">   &#x2F;&#x2F; 开启 CSS source maps?</span><br><span class="line">   sourceMap: false,</span><br><span class="line">   &#x2F;&#x2F; css预设器配置项</span><br><span class="line">   loaderOptions: &#123;&#125;,</span><br><span class="line">   &#x2F;&#x2F; 启用 CSS modules for all css &#x2F; pre-processor files.</span><br><span class="line">   modules: false</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-通过npm-run-build-report分析，排查比较大的包并拆分"><a href="#2-4-通过npm-run-build-report分析，排查比较大的包并拆分" class="headerlink" title="2.4 通过npm run build --report分析，排查比较大的包并拆分"></a>2.4 通过<code>npm run build --report</code>分析，排查比较大的包并拆分</h3><p>vue-cli4中默认支持分析，需要分析直接执行<code>npm run build --report</code>命令，构建完成后会在dist文件中生产report.html文件，再在浏览器中打开<a href="http://hostname/report.html%E5%8D%B3%E5%8F%AF" target="_blank" rel="noopener">http://hostname/report.html即可</a><br>如果使用webpack，安装webpack-bundle-analyzer后在webpack.prop.conf.js中配置即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (config.build.bundleAnalyzerReport) &#123;</span><br><span class="line">   	var BundleAnalyzerReport &#x3D; require(&#39;webpack-build-analyzer&#39;).BundleAnalyzerReport;</span><br><span class="line">       webpackConfig.plugins.push(new BundleAnalyzerReport());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-对图片压缩处理"><a href="#2-5-对图片压缩处理" class="headerlink" title="2.5 对图片压缩处理"></a>2.5 对图片压缩处理</h3><p>如果对分辨率要求不高的页面，可使用<code>image-webpack-loader</code>插件压缩图片<br>使用方法如下：</p>
+<ul>
+<li>安装image-webpack-loader:<br><code>npm install image-webpack-loader --save-dev</code><br>若安装失败，可尝试使用淘宝镜像安装:<br><code>npm install cnpm -g --registry=https://registry.npm.taobao.org</code></li>
+<li>在vue.config.js(vue-cli4)中配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">chainWebpack(config) &#123;</span><br><span class="line">  config.module</span><br><span class="line">    .rule(&#39;images&#39;)</span><br><span class="line">    .test(&#x2F;\.(png|jpe?g|gif|svg)(\?.*)?$&#x2F;)</span><br><span class="line">    .use(&#39;image-webpack-loader&#39;)</span><br><span class="line">    .loader(&#39;image-webpack-loader&#39;)</span><br><span class="line">    .options(&#123;bypassOnDebug: true&#125;)</span><br><span class="line">    .end()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="三、web技术层面的优化"><a href="#三、web技术层面的优化" class="headerlink" title="三、web技术层面的优化"></a>三、web技术层面的优化</h2><h3 id="3-1-开启gzip压缩"><a href="#3-1-开启gzip压缩" class="headerlink" title="3.1 开启gzip压缩"></a>3.1 开启gzip压缩</h3><p>gzip开启gzip压缩可非常有效加快页面加载，根据以往经验，开启压缩与未开启压缩文件大小相差几倍，速度相应也能提升几倍，生产环境开启gzip基本是必须的<br>nginx开启gzip配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#开启和关闭gzip模式</span><br><span class="line">gzip on;</span><br><span class="line"></span><br><span class="line">#gizp压缩起点，文件大于1k才进行压缩</span><br><span class="line">gzip_min_length 1k;</span><br><span class="line"></span><br><span class="line"># gzip 压缩级别，1-9，数字越大压缩的越好，也越占用CPU时间</span><br><span class="line">gzip_comp_level 6;</span><br><span class="line"></span><br><span class="line"># 进行压缩的文件类型。</span><br><span class="line">gzip_types text&#x2F;plain application&#x2F;javascript application&#x2F;x-javascript text&#x2F;css application&#x2F;xml text&#x2F;xml text&#x2F;javascript application&#x2F;json image&#x2F;png image&#x2F;gif image&#x2F;jpeg;</span><br><span class="line"></span><br><span class="line">#nginx对于静态文件的处理模块，开启后会寻找以.gz结尾的文件，直接返回，不会占用cpu进行压缩，如果找不到则不进行压缩</span><br><span class="line"># gzip_static on|off</span><br><span class="line"></span><br><span class="line"># 是否在http header中添加Vary: Accept-Encoding，建议开启</span><br><span class="line">gzip_vary on;</span><br><span class="line"></span><br><span class="line"># 设置压缩所需要的缓冲区大小，以4k为单位，如果文件为7k则申请2*4k的缓冲区 </span><br><span class="line">gzip_buffers 4 16k;</span><br><span class="line"></span><br><span class="line"># 设置gzip压缩针对的HTTP协议版本</span><br><span class="line"># gzip_http_version 1.1;</span><br></pre></td></tr></table></figure>
+<p>检查是否压缩开启成功，再配置完成后重启服务，可通过浏览器调试页面观察network面版<code>response header</code>中<code>accept-encoding: gzip</code></p>
+<h3 id="3-2-使用缓存"><a href="#3-2-使用缓存" class="headerlink" title="3.2 使用缓存"></a>3.2 使用缓存</h3><p>为了提高用户加载页面速度，对静态资源使用缓存是非常有必要的，针对不同类型资源，配置不同状态的缓存（强缓存、协商缓存），能非常有效提升页面加载速度，缓存可通过响应头header来配置，涉及的知识点比较多，可以深入研究点比较多，这里暂时不做详细解读。</p>
+<h3 id="3-3-静态资源使用CDN"><a href="#3-3-静态资源使用CDN" class="headerlink" title="3.3 静态资源使用CDN"></a>3.3 静态资源使用CDN</h3><p>CDN有更好的可用性，更低的网络延迟和丢包率，图片等静态资源使用CDN，可以非常有效的提升网站的加载速度<br>CDN原理知识点详解，推荐查看链接<a href="https://www.zhihu.com/question/36514327/answer/193768864" target="_blank" rel="noopener">https://www.zhihu.com/question/36514327/answer/193768864</a></p>
+<p><em>参考文档：</em><br><a href="https://cn.vuejs.org/v2/style-guide/" target="_blank" rel="noopener">vue官网-风格指南</a><br><a href="https://segmentfault.com/a/1190000019499007" target="_blank" rel="noopener">vuecli下首屏优化</a><br><a href="https://blog.csdn.net/qq_38244874/article/details/108733692" target="_blank" rel="noopener">Vue-Cli4.0及以上image-webpack-loader压缩图片插件的使用</a><br><a href="https://www.cnblogs.com/mengfangui/p/12165096.html" target="_blank" rel="noopener">nginx开启gzip压缩配置</a><br><a href="https://zhuanlan.zhihu.com/p/96740001" target="_blank" rel="noopener">Vue中keep-alive的使用</a><br><a href="https://zhuanlan.zhihu.com/p/83180326" target="_blank" rel="noopener">vue性能优化</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/26/100008/" rel="prev" title="python常用模块库">
+      <i class="fa fa-chevron-left"></i> python常用模块库
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vue项目性能优化"><span class="nav-number">1.</span> <span class="nav-text">vue项目性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Vue框架代码层面的优化"><span class="nav-number">1.2.</span> <span class="nav-text">一、Vue框架代码层面的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-路由、组件懒加载"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 路由、组件懒加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-图片懒加载"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 图片懒加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-v-if与v-show区分使用场景"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 v-if与v-show区分使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-v-for必须配置key，且避免与v-if同时使用"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.4 v-for必须配置key，且避免与v-if同时使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-watch与computed区分使用场景"><span class="nav-number">1.2.5.</span> <span class="nav-text">1.5 watch与computed区分使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-监听事件的销毁"><span class="nav-number">1.2.6.</span> <span class="nav-text">1.6 监听事件的销毁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-合理使用keep-alive组件"><span class="nav-number">1.2.7.</span> <span class="nav-text">1.7 合理使用keep-alive组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-长列表性能优化"><span class="nav-number">1.2.8.</span> <span class="nav-text">1.8 长列表性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-9-服务的渲染ssr化或预渲染"><span class="nav-number">1.2.9.</span> <span class="nav-text">1.9 服务的渲染ssr化或预渲染</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、webpack打包配置层面的优化"><span class="nav-number">1.3.</span> <span class="nav-text">二、webpack打包配置层面的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-第三方组件库按需加载，避免全量全局引入"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 第三方组件库按需加载，避免全量全局引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-提取公共代码"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 提取公共代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-css是否要拆分"><span class="nav-number">1.3.3.</span> <span class="nav-text">2.3 css是否要拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-通过npm-run-build-report分析，排查比较大的包并拆分"><span class="nav-number">1.3.4.</span> <span class="nav-text">2.4 通过npm run build --report分析，排查比较大的包并拆分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-对图片压缩处理"><span class="nav-number">1.3.5.</span> <span class="nav-text">2.5 对图片压缩处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、web技术层面的优化"><span class="nav-number">1.4.</span> <span class="nav-text">三、web技术层面的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-开启gzip压缩"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1 开启gzip压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-使用缓存"><span class="nav-number">1.4.2.</span> <span class="nav-text">3.2 使用缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-静态资源使用CDN"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.3 静态资源使用CDN</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weely.cc</p>
+  <div class="site-description" itemprop="description">黎人过客的小站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weely.cc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

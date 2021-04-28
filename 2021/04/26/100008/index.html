@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="python中文文档：http:&#x2F;&#x2F;docs.pythontab.com&#x2F;python&#x2F;python3.4&#x2F; OS模块简介：是python的一个系统编程的操作模块，可以对系统文件与目录进行操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python常用模块库">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/26/100008/index.html">
+<meta property="og:site_name" content="黎人过客">
+<meta property="og:description" content="python中文文档：http:&#x2F;&#x2F;docs.pythontab.com&#x2F;python&#x2F;python3.4&#x2F; OS模块简介：是python的一个系统编程的操作模块，可以对系统文件与目录进行操作">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-26T14:41:11.121Z">
+<meta property="article:modified_time" content="2021-04-28T14:28:39.148Z">
+<meta property="article:author" content="Weely.cc">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.weely.cc/2021/04/26/100008/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>python常用模块库 | 黎人过客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">黎人过客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">好记性不如烂笔头</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/26/100008/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="黎人过客的小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          python常用模块库
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-26 22:41:11" itemprop="dateCreated datePublished" datetime="2021-04-26T22:41:11+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-28 22:28:39" itemprop="dateModified" datetime="2021-04-28T22:28:39+08:00">2021-04-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>python中文文档：<a href="http://docs.pythontab.com/python/python3.4/" target="_blank" rel="noopener">http://docs.pythontab.com/python/python3.4/</a></p>
+<h2 id="OS模块"><a href="#OS模块" class="headerlink" title="OS模块"></a>OS模块</h2><p>简介：是python的一个系统编程的操作模块，可以对系统文件与目录进行操作</p>
+<a id="more"></a>
+
+<h3 id="1-交互式方式下通过下面代码可查看os模块的帮助文档"><a href="#1-交互式方式下通过下面代码可查看os模块的帮助文档" class="headerlink" title="1.交互式方式下通过下面代码可查看os模块的帮助文档"></a>1.交互式方式下通过下面代码可查看os模块的帮助文档</h3><blockquote>
+<blockquote>
+<blockquote>
+<p>import os<br>help(os)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h1 id="2-重要函数及变量"><a href="#2-重要函数及变量" class="headerlink" title="2.重要函数及变量"></a>2.重要函数及变量</h1><p>  os.sep 更改操作系统中的路径分布<br>  os.getcwd()获取当前执行路径<br>  os.listdir() 列出当前目录下的所有文件及文件夹<br>  os.remove() 可删除指定文件<br>  os.system() 用来运行shell命令<br>  os.chdir() 改变当前目录到指定目录</p>
+<h1 id="os模块函数作用详解"><a href="#os模块函数作用详解" class="headerlink" title="os模块函数作用详解"></a>os模块函数作用详解</h1><p>  os.system函数可运行shell命令外<br>  也还有一些函数可执行外部程序，包括execv，它会退出python解析器，并将控制权交给被执行的程序<br>  os.变量主要用于系统路径中的分隔符</p>
+<h1 id="os-path-详解"><a href="#os-path-详解" class="headerlink" title="os.path 详解"></a>os.path 详解</h1><ol>
+<li>os.path.absPath(filename) 返回文件的绝对路径</li>
+<li>os.path.split(path)  将path分割成目录和文件名的二元组返回  path = e:/test/test.png  返回 e:/test, test.png</li>
+<li>os.path.dirname(path) 返回path的目录，就是 os.path.split(path) 的第一个元素</li>
+<li>os.path.commonprefix(list) 返回list中所有path共有的最长路径<br> os.path.commomprefix([‘/home/td’, ‘/home/td/ff’, ‘/home/td/fff’])   -&gt; ‘/home/td’</li>
+<li>os.path.basename(path) 返回path最后的文件名，如果path以/或\结尾，就返回空值，即 os.path.split(path) 的第二个元素</li>
+<li>os.path.exists(path) 判断path是否存在，存在返回True，不存在返回False</li>
+<li>os.path.isabs(path) 如果path是绝对路径，返回True</li>
+<li>os.path.isfile(path) 如果path是存在的文件，返回True</li>
+<li>os.path.isdir(path) 判断是否为目录</li>
+<li>os.path.join(path1[,path2[,…]])  组合路径并返回</li>
+<li>os.path.normcase(path) window系统下将路径转换为小写返回</li>
+<li>os.path.normpath(path) 规范化路径</li>
+<li>os.path.splitdrice(path)  返回(drivername, fpath) 元组</li>
+<li>os.path.splitext(path) 分割文件路径和后缀名并返回对应元组</li>
+<li>os.path.getsize(path)  返回path文件大小(字节数)</li>
+<li>os.path.getatime(path) 返回文件最后存取时间(时间戳)</li>
+<li>os.path.getmtime(path) 返回最后修改时间(时间戳)</li>
+<li>os.path.islink(path)    </li>
+<li>os.path.realpath(path)  返回规范绝对路径  eg:os.path.realpath(test.txt)   返回 e:test/test.txt  (不论test.txt是否存在)</li>
+</ol>
+<h1 id="eg"><a href="#eg" class="headerlink" title="eg:"></a>eg:</h1><p>  import os<br>  print(os.getcwd())                  #获取当前路径<br>  print(os.listdir(‘c:\window’))      #列出目录下所有文件及文件夹，window下相当于 dir<br>  print(os.mkdir(“test”))             #创建test目录<br>  print(os.rmdir(‘c))                 #删除 c目录<br>  print(os.rename(‘abc.txt’, ‘newname.txt’))      #重命名文件</p>
+<h2 id="SYS模块"><a href="#SYS模块" class="headerlink" title="SYS模块"></a>SYS模块</h2><h1 id="简介：用来处Python-运行时配置及资源，从而可与当前程序外的系统环境交互"><a href="#简介：用来处Python-运行时配置及资源，从而可与当前程序外的系统环境交互" class="headerlink" title="简介：用来处Python 运行时配置及资源，从而可与当前程序外的系统环境交互"></a>简介：用来处Python 运行时配置及资源，从而可与当前程序外的系统环境交互</h1><ul>
+<li>导入模块：<blockquote>
+<blockquote>
+<blockquote>
+<p>import sys<br>dir(sys)        #查看模块中的可用方法</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h1 id="sys模块常用函数变量"><a href="#sys模块常用函数变量" class="headerlink" title="sys模块常用函数变量"></a>sys模块常用函数变量</h1></li>
+<li>变量<br>sys.stdin 标准输入流<br>sys.stdout 标准输出流<br>sys.stderr 标准错误流<br>sys.path 查找模块所在目录的目录列表名<br>sys.argv 命令行的参数，  sys.argv[0] 表示脚本名称<br>sys.platform 返回当前系统平台，eg：win32,linux</li>
+<li>函数方法<br>sys.exit([arg]) 方法可以退出当前程序，可提供整数类型参数<br>/sys.modules 方法可将模块的名字映射到实际存在的模块上，只应用于目前导入的模块<br>/sys.getdefaultencoding() 获取系统当前编码，一般默认ascii<br>/sys.setdefaultencoding() 设置系统默认编码，dir(sys)不可见，执行不通过时可以先执行 reload(sys)</li>
+</ul>
+<h2 id="re-正则表达式"><a href="#re-正则表达式" class="headerlink" title="re 正则表达式"></a>re 正则表达式</h2><h1 id="简介"><a href="#简介" class="headerlink" title="简介:"></a>简介:</h1><h1 id="python-re-正则表达式语法"><a href="#python-re-正则表达式语法" class="headerlink" title="python re 正则表达式语法"></a>python re 正则表达式语法</h1><ul>
+<li>匹配字符</li>
+</ul>
+<ol>
+<li>‘.’  匹配任意除换行符，即除 “\n” 以外的任意字符</li>
+<li>‘&#39;  转义符</li>
+<li>‘[]’ 中括号用来创建字符集， 第一个出现字符如果是 ^ ,表示反向匹配</li>
+</ol>
+<ul>
+<li>预定义字符集<br>\d   匹配数字，eg: [0,9]<br>\D   与 \d 相反，匹配所有非数字字符<br>\s   空白字符， eg: 空格， \t\r\n\f\v<br>\S   非空白字符<br>\w   单词字符(数字及字母)，eg: A<del>Z, a</del>z, 0~9<br>\W   非单词字符</li>
+<li>‘*’        0次及以上<br>‘+’        1次及以上<br>‘?’        0或1次<br>‘{m}’      m次<br>‘{m,n}’    m至n次</li>
+<li>常用函数<br>re.compile()  创建<br>re.search()   查询<br>re.match()    匹配<br>re.split()    分割<br>re.findall()<br>re.sub(old,new)   替换<br>re.escape()   转义</li>
+</ul>
+<h2 id="time模块"><a href="#time模块" class="headerlink" title="time模块"></a>time模块</h2><h1 id="可以使用时间戳-、-格式化的时间-str-、-元组-struct-time-及calendar表示时间"><a href="#可以使用时间戳-、-格式化的时间-str-、-元组-struct-time-及calendar表示时间" class="headerlink" title="可以使用时间戳 、 格式化的时间(str) 、 元组(struct_time)及calendar表示时间"></a>可以使用时间戳 、 格式化的时间(str) 、 元组(struct_time)及calendar表示时间</h1><h1 id="元组struct-time-有9个元素"><a href="#元组struct-time-有9个元素" class="headerlink" title="元组struct_time 有9个元素"></a>元组struct_time 有9个元素</h1><p>  time.localtime([secs])  返回time.struct_time() 元组<br>  time.struct_time(tm_year=2017, tm_mon=5, tm_mday=25, tm_hour=15, tm_min=24, tm_sec=43, tm_wday=3, tm_yday=145, tm_isdst=0)</p>
+<h1 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h1><p>  time.localtime([secs])    将时间戳转换成当前时区的时间结构，返回的是一个元组，参数默认为当前时间<br>  time.time()   返回纪元开始的总秒数(float值)<br>  time.ctime()  将一个时间戳转换为时间字符串<br>      eg: time.ctime(time.time()) -&gt;’Thu May 25 15:20:36 2017’<br>  time.sleep()  暂停程序，参数以秒计<br>  time.clock() 返回浮点数可计算程序的总运行时间，也可以计算两次clock()的间隔<br>  time.strftime() 将struct_time元组按照规定输出字符串<br>  #时区相关 pytz: tz1 = pytz.timezone(‘Asiz/Shanghai) (pytz为python2版本的)</p>
+<h2 id="pickle持久化"><a href="#pickle持久化" class="headerlink" title="pickle持久化"></a>pickle持久化</h2><h1 id="pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象"><a href="#pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象" class="headerlink" title="pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象"></a>pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象</h1><h1 id="pickle-与-cpickle对比"><a href="#pickle-与-cpickle对比" class="headerlink" title="pickle 与 cpickle对比"></a>pickle 与 cpickle对比</h1><p>  前者用pickle模块，后者用c实现，速度比pickle快几倍，推荐使用cpickle</p>
+<h1 id="常用方法："><a href="#常用方法：" class="headerlink" title="常用方法："></a>常用方法：</h1><p>  序列化/反序列化</p>
+<ul>
+<li>pickle.dump(obj, file, protocol=None, *, fix_imports=True) 提示持久化的对象，保存到文件，使用的协议，默认为0-&gt;ASCII,1-&gt;旧式2进制，2-&gt;新式2进制，2比1高效<br>  Write a pickled representation of obj to the open file object file. This is equivalent to Pickler(file, protocol).dump(obj)</li>
+<li>pickle.load(file, *, fix_imports=True, encoding=”ASCII”, errors=”strict”)  与dump相反<br>  Read a pickled object representation from the open file object file and return the reconstituted object hierarchy specified therein. This is equivalent to Unpickler(file).load().<h1 id="eg："><a href="#eg：" class="headerlink" title="eg："></a>eg：</h1>import pickle</li>
+</ul>
+<h2 id="random-随机"><a href="#random-随机" class="headerlink" title="random 随机"></a>random 随机</h2><h1 id="生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等"><a href="#生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等" class="headerlink" title="生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等"></a>生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等</h1><h1 id="重要函数"><a href="#重要函数" class="headerlink" title="重要函数"></a>重要函数</h1><p>  random.random() 返回 0 &lt;= n &lt; 1 之间的随机浮点数<br>  random.uniform(a,b) 可以设定浮点数的范围，设置上下限(选取a<del>b中的浮点数,a、b为任意实数)<br>  random.randint(a,b) 随机生成a</del>b中的一个整数int(a,b为整数, a &lt;= b)<br>  random.choice(seq) 从序列中返回随机元素, seq可以为list, tuple, set<br>  random.getrandbits(n) 以长整数形式返回n个随机位<br>  random.shuffle(seq[,random]) 原地指定seq序列<br>  random.sample(seq, n) 从序列seq中选择n个随机且独立的元素</p>
+<h1 id="eg-1"><a href="#eg-1" class="headerlink" title="eg:"></a>eg:</h1><p>  random.uniform(-1.43, -423)  输出-423 到 -1.43之间的浮点数</p>
+<h2 id="csv模块"><a href="#csv模块" class="headerlink" title="csv模块"></a>csv模块</h2><p>  python内置模块，导入： import csv<br>  #主要函数<br>  csv.reader(csvfile, dialect=’excel’, **fmtparams) 读取csv文件数据<br>  csv.writer(csvfile, dialect=’excel’, **fmtparams) 写入csv文件数据</p>
+<h1 id="eg-2"><a href="#eg-2" class="headerlink" title="eg:"></a>eg:</h1><p>  with open(‘csv_test.csv’, newline=””) as csvfile:<br>      reader = csv.reader(csvfile, delimiter=’ ‘, quotechar= ‘|’)<br>      for row in reader:<br>          print(‘,’.join(row))<br>          print(row)<br>  with open(‘csv_test.csv’, ‘w’, newline=””) as csvfile:<br>      writer = csv.writer(csvfile, delimiter=’ ‘, quotechar=’|’, quoting=csv.QUOTE_MINIMAL)<br>      writer.writerow([‘Spam’] * 5 + [‘Baked Beans’])<br>      writer.writerow([‘Spam’, ‘Lovely Spam’, ‘Wonderful Spam’])</p>
+<h2 id="logging模块"><a href="#logging模块" class="headerlink" title="logging模块"></a>logging模块</h2><p>  <a href="http://www.cnblogs.com/dkblog/archive/2011/08/26/2155018.html" target="_blank" rel="noopener">http://www.cnblogs.com/dkblog/archive/2011/08/26/2155018.html</a><br>  调用：<br>  import logging<br>  logging 日志级别： critical &gt; error &gt; warning &gt; info &gt; debug &gt; noset<br>  默认的日志级别为 warning<br>  level：CRITICAL   Numeric value：50(CRITICAL/50)、<br>          ERROR/40、WARNING/30、INFO/20、DEBUG/10、NOTSET/0<br>  logging.basicConfig函数对日志的输出格式及方式做相关配置：<br>  logging.basicConfig(level=logging.DEBUG,<br>      format=’%(asctime)s % (filename) s [line:%(lineno)d] % (levelname)s %(message)s’,<br>      datefmt=’%a, %d %b %Y %H:%M:%S’,<br>      filename=’myapp.log’,<br>      filemode=’w’)</p>
+<h2 id="Socket-套接字模块"><a href="#Socket-套接字模块" class="headerlink" title="Socket 套接字模块"></a>Socket 套接字模块</h2><p>  模块支持TCP/IP,UDP/IP, ICMP/IP协议，创建服务端与客户端套接字<br>  import socket</p>
+<h2 id="Json模块-json-encoder-and-decoder"><a href="#Json模块-json-encoder-and-decoder" class="headerlink" title="Json模块/ json encoder and decoder"></a>Json模块/ json encoder and decoder</h2><p>  import json<br>  json.dumps([‘foo’,{‘bar’:(‘baz’,None,1.0,2)}])<br>  #</p>
+<ul>
+<li>json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)<br>  Serialize obj to a JSON formatted str using this conversion table. The arguments have the same meaning as in dump().</li>
+<li>json.load(fp, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw)<br>  Deserialize fp (a .read()-supporting file-like object containing a JSON document) to a Python object using this conversion table.</li>
+</ul>
+<h2 id="urlparse-模块：-将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url"><a href="#urlparse-模块：-将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url" class="headerlink" title="urlparse 模块： 将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url"></a>urlparse 模块： 将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url</h2><ul>
+<li>注意: The urlparse module is renamed to urllib.parse in Python 3. <pre><code>  The 2to3 tool will automatically adapt imports when converting your sources to Python 3.
+</code></pre>
+  import urlparse<h1 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h1>urlparse.urlparse() 分解url，返回元组<br>urlparse.urlunparse()  接受元组，组合成url<br>urlparse.urlsplit(url)<br>urlparse.unjoin(base, url)<h2 id="urllib模块-python-3-5"><a href="#urllib模块-python-3-5" class="headerlink" title="urllib模块/python 3.5"></a>urllib模块/python 3.5</h2>参考博客：<a href="http://www.cnblogs.com/Lands-ljk/p/5447127.html" target="_blank" rel="noopener">http://www.cnblogs.com/Lands-ljk/p/5447127.html</a><br>官方文档： <a href="https://docs.python.org/3.5/library/urllib.html" target="_blank" rel="noopener">https://docs.python.org/3.5/library/urllib.html</a><br>urllib.request for opening and reading urls<br>urllib.error containing the exceptions raised by urllib.request<br>urllib.parse for parsing URLS<br>urllib.robotparser for parsing robots.txt</li>
+</ul>
+<h1 id="urllib-request"><a href="#urllib-request" class="headerlink" title="urllib.request:"></a>urllib.request:</h1><pre><code>urllib.request.urlopen(url, data=None, [timeout,]*, cafile=None, capath=None, cadefault=False, context=None)
+  data: 发送到服务器的data必须是bytes对象,或者是指定的可迭代的在头部指定了content-Lenght的对象; 
+    eg: req_data = parse.urlencode([(&quot;email&quot;, r&quot;lm220930@163.com&quot;),])
+  timeout: 可选参数，设置请求访问时响应超时时间
+  context: 如果指定了上下文，则它是描述各种SSL选项的ssl.SSLContext实例
+  The optional cafile and capath parameters specify a set of trusted CA certificates for HTTPS requests
+  The cadefault parameter is ignored
+  通过context manager 返回的对象返回以下几个可供调用的函数
+  function:
+    geturl() :返回访问的url
+    info() :返回访问的头部信息
+    getcode(): 返回响应的状态码
+  Note that None may be returned if no handler handles the request
+  如果代理*_proxy变量设置时，proxyhandler需要被安装，请求需要通过代理来处理
+urllib.request.install_opener(opener)
+urllib.request.builder_opener(opener)
+urllib.request.pathname2url(path):     把本地路径转换为url路径,联合quote()
+urllib.request.url2pathname(path):     把url路径转换为本地路径 ,unquote()
+urllib.request.getproxies(): 返回proxy的一个 dict
+hanler...
+Request Objects:
+  * urllib.request.Request(url, data=None, headers={}, method=None)
+  Request.full_url  /  Request.type  /  Request.host  /  Request.selector  /  Request.data  /method  /  unverifiable 
+  Request.get_method()  /  add_header(key, val)  / add_unredirected_header(key, header)  /  has_header(header)  / remove_header(header)  /  get_full_url()
+  Request.set_proxy(host, type)  /  Request.get_header(header_name, default=None)  /  Request.header_items()
+OpenerDirector Objects:
+  OpenerDirector.add_handler(handler)  /  OpenerDirector.open(url, data=None[, timeout])  /  OpenerDirector.error(proto, *args)
+BaseHandler Objects:
+  BaseHandler.add_parent(director) :Add a director as parent.  
+  BaseHandler.close(): remove any parents
+HTTPRedirectHandler Objects:
+  HTTPRedirectHandler.redirect_request(req, fp, code, msg, hdrs, newurl)
+HTTPCookieProcessor Objects:
+  HTTPCookieProcessor.cookiejar:  存储cookie
+</code></pre>
+<ul>
+<li>URL Parsing:<br>urllib.parse.urlparse(urlstring, scheme=’’,allow_fragments=True):<br>  转换url为6个元素<blockquote>
+<blockquote>
+<blockquote>
+<p>o = parse.urlparse(“<a href="http://www.baidu.com&quot;/" target="_blank" rel="noopener">http://www.baidu.com&quot;</a>)<br>o<br>  ParseResult(scheme=’http’, netloc=’<a href="http://www.baidu.com&/#39;" target="_blank" rel="noopener">www.baidu.com&#39;</a>, path=’’, params=’’, query=’’, fragment=’’)<br>o.scheme<br>  ‘http’<br>urllib.parse.parse_qs(qs, keep_blank_values=False, strict_parsing=False, encoding=’utf-8’, errors=’replace’)<br>…</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="urllib2模块"><a href="#urllib2模块" class="headerlink" title="urllib2模块"></a>urllib2模块</h2></li>
+</ul>
+<h2 id="robotparser解析"><a href="#robotparser解析" class="headerlink" title="robotparser解析"></a>robotparser解析</h2><h2 id="Cookie模块"><a href="#Cookie模块" class="headerlink" title="Cookie模块"></a>Cookie模块</h2><h2 id="smtplib模块"><a href="#smtplib模块" class="headerlink" title="smtplib模块"></a>smtplib模块</h2><h2 id="Base64模块"><a href="#Base64模块" class="headerlink" title="Base64模块"></a>Base64模块</h2><h2 id="xmlrpclib客户端"><a href="#xmlrpclib客户端" class="headerlink" title="xmlrpclib客户端"></a>xmlrpclib客户端</h2><h2 id="string文本"><a href="#string文本" class="headerlink" title="string文本"></a>string文本</h2><h2 id="queue模块"><a href="#queue模块" class="headerlink" title="queue模块"></a>queue模块</h2><p>  调用模块：import queue</p>
+<h2 id="math数学计算"><a href="#math数学计算" class="headerlink" title="math数学计算"></a>math数学计算</h2><h2 id="linecache缓存"><a href="#linecache缓存" class="headerlink" title="linecache缓存"></a>linecache缓存</h2><h2 id="threading多线程"><a href="#threading多线程" class="headerlink" title="threading多线程"></a>threading多线程</h2><h2 id="sqlite3数据库"><a href="#sqlite3数据库" class="headerlink" title="sqlite3数据库"></a>sqlite3数据库</h2><h2 id="gzip压缩解压"><a href="#gzip压缩解压" class="headerlink" title="gzip压缩解压"></a>gzip压缩解压</h2><h2 id="tkinter"><a href="#tkinter" class="headerlink" title="tkinter"></a>tkinter</h2><p>  图表网站：<a href="http://matplotlib.org/users/screenshots.html" target="_blank" rel="noopener">http://matplotlib.org/users/screenshots.html</a><br>  matplotlib.org/downloads.html<br>  window下安装matplotlib:注意python版本：<br>  python -m pip install -U pip setuptools<br>  python -m pip install matplotlib</p>
+<p>  import tkinter as tk<br>  from tkinter import ttk<br>  relief样式属性值：tk.SOLID,tk.SUNKEN,tk.RAISED,tk.FLAT,tk.GROOVE,tk,RIDGE,<br>  justify样式属性值：tk.LEFT,tk.RIGHT,tk.TOP,tk.BOTTOM<br>  borderwidth: 控件边框线宽度<br>  font: 控件字体样式<br>  标签：<br>  Label(father_widget,text=’label’[,width=0,height=0,textvariable,background(bg)=’blue’,relief=tk.FLAT,justify=tk.LEFT,<br>          borderwidth=1,font=(‘tahoma’,’8’,’normal’)])</p>
+<p>  输入框：<br>  Entry(father_widget,textvariable,…)<br>  按钮：<br>  Button(father_widget, text=’button’,command=command,…)<br>  下拉框：<br>  ttk.Combobox(father_widget,textvariable=tk.IntVar(),values=[…])<br>  多行文本框：<br>  from tkinter.srcolledtext import Scrolledtext<br>  Scrolledtext<br>  标签框架：<br>  LabelFrame(father_widget, text=’labelframe’)<br>  菜单：<br>  from tkinter import Menu<br>  菜单栏： menuBar = Menu(root)<br>  初始化菜单对象： menuitem = Menu(menuBar,tearoff=0)<br>  添加菜单到菜单栏： mebuBar.add_cascade(label=’’,menu=menuitem)<br>  添加子菜单项： menuitem.add_command(label=’item’,command=command)<br>  spinbox:<br>  from tkinter import Spinbox<br>  spinbox = tk.Spinbox(father_widget,from_=1,to=10,bd=10,[command=command,values=(1,2,…10)])</p>
+<h2 id="ipython"><a href="#ipython" class="headerlink" title="ipython"></a>ipython</h2><h1 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h1><p>  linux：<br>    ubuntu: sudo apt-get install ipython</p>
+<h1 id="使用："><a href="#使用：" class="headerlink" title="使用："></a>使用：</h1><pre><code>%logstart  -&gt;  开启日志记录
+%logoff    -&gt;  关闭日志记录
+使用ipython执行系统shell命令时，需在命令前加上！
+  eg:  !date  -&gt;  输出系统时间，   !dir  -&gt;  即shell命令下的dir
+  实际上是以！为前缀的任何内容都会被发送到系统shell
+%hist：该命令显示历史记录， 使用 -g选项可以对%hist进行搜索
+  eg: %hist -g a  :搜索历史输入的指令中包含a的行并返回
+Magic函数：Magic函数以% 符号开始，如果只用作单行命令，可省略%
+
+numpy库常用函数：
+  sqrt:计算素组元素的算术平方根
+  log:计算数组元素的自然对数
+  arange:生成一个指定范围的数组
+  astype:把数组元素转换为指定数据类型
+  sum：计算数组元素之和
+  ceil：对数组元素向上取整
+  modf：返回浮点数的小数部分及整数部分
+  where：返回取值符合条件的数组元素的索引值
+  ravel：返回一个展开的一维数组
+  take：从数组取出指定元素
+  sort:对数组元素排序
+  outer：返回两个数组的外积
+  diff：计算离散差分，默认计算一阶差分
+  sign：返回数组元素的符号
+  eig：返回数组元素的特征值及特征向量
+  histogram,ployfit
+  compress,randint
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/26/100007/" rel="prev" title="熟悉vue框架的 keep-alive 组件">
+      <i class="fa fa-chevron-left"></i> 熟悉vue框架的 keep-alive 组件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/28/100009/" rel="next" title="vue项目性能优化">
+      vue项目性能优化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OS模块"><span class="nav-number">1.</span> <span class="nav-text">OS模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-交互式方式下通过下面代码可查看os模块的帮助文档"><span class="nav-number">1.1.</span> <span class="nav-text">1.交互式方式下通过下面代码可查看os模块的帮助文档</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-重要函数及变量"><span class="nav-number"></span> <span class="nav-text">2.重要函数及变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#os模块函数作用详解"><span class="nav-number"></span> <span class="nav-text">os模块函数作用详解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#os-path-详解"><span class="nav-number"></span> <span class="nav-text">os.path 详解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eg"><span class="nav-number"></span> <span class="nav-text">eg:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SYS模块"><span class="nav-number">1.</span> <span class="nav-text">SYS模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简介：用来处Python-运行时配置及资源，从而可与当前程序外的系统环境交互"><span class="nav-number"></span> <span class="nav-text">简介：用来处Python 运行时配置及资源，从而可与当前程序外的系统环境交互</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sys模块常用函数变量"><span class="nav-number"></span> <span class="nav-text">sys模块常用函数变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#re-正则表达式"><span class="nav-number">1.</span> <span class="nav-text">re 正则表达式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number"></span> <span class="nav-text">简介:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#python-re-正则表达式语法"><span class="nav-number"></span> <span class="nav-text">python re 正则表达式语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#time模块"><span class="nav-number">1.</span> <span class="nav-text">time模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可以使用时间戳-、-格式化的时间-str-、-元组-struct-time-及calendar表示时间"><span class="nav-number"></span> <span class="nav-text">可以使用时间戳 、 格式化的时间(str) 、 元组(struct_time)及calendar表示时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#元组struct-time-有9个元素"><span class="nav-number"></span> <span class="nav-text">元组struct_time 有9个元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用函数"><span class="nav-number"></span> <span class="nav-text">常用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pickle持久化"><span class="nav-number">1.</span> <span class="nav-text">pickle持久化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象"><span class="nav-number"></span> <span class="nav-text">pickle模块将任意一个Python对象转换成系统字节的过程叫做串行化对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pickle-与-cpickle对比"><span class="nav-number"></span> <span class="nav-text">pickle 与 cpickle对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用方法："><span class="nav-number"></span> <span class="nav-text">常用方法：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eg："><span class="nav-number"></span> <span class="nav-text">eg：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#random-随机"><span class="nav-number">1.</span> <span class="nav-text">random 随机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等"><span class="nav-number"></span> <span class="nav-text">生成随机浮点数、整数、字符串、随机选择列表中的元素，打乱数据等等</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重要函数"><span class="nav-number"></span> <span class="nav-text">重要函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eg-1"><span class="nav-number"></span> <span class="nav-text">eg:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#csv模块"><span class="nav-number">1.</span> <span class="nav-text">csv模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#eg-2"><span class="nav-number"></span> <span class="nav-text">eg:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#logging模块"><span class="nav-number">1.</span> <span class="nav-text">logging模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket-套接字模块"><span class="nav-number">2.</span> <span class="nav-text">Socket 套接字模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Json模块-json-encoder-and-decoder"><span class="nav-number">3.</span> <span class="nav-text">Json模块&#x2F; json encoder and decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#urlparse-模块：-将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url"><span class="nav-number">4.</span> <span class="nav-text">urlparse 模块： 将一个普通的URl解析成6个部分，返回的数据类型都是元组，同时可将分解的组合成url</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法："><span class="nav-number"></span> <span class="nav-text">方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#urllib模块-python-3-5"><span class="nav-number">1.</span> <span class="nav-text">urllib模块&#x2F;python 3.5</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#urllib-request"><span class="nav-number"></span> <span class="nav-text">urllib.request:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#urllib2模块"><span class="nav-number">1.</span> <span class="nav-text">urllib2模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#robotparser解析"><span class="nav-number">2.</span> <span class="nav-text">robotparser解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie模块"><span class="nav-number">3.</span> <span class="nav-text">Cookie模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#smtplib模块"><span class="nav-number">4.</span> <span class="nav-text">smtplib模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Base64模块"><span class="nav-number">5.</span> <span class="nav-text">Base64模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xmlrpclib客户端"><span class="nav-number">6.</span> <span class="nav-text">xmlrpclib客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#string文本"><span class="nav-number">7.</span> <span class="nav-text">string文本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#queue模块"><span class="nav-number">8.</span> <span class="nav-text">queue模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#math数学计算"><span class="nav-number">9.</span> <span class="nav-text">math数学计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linecache缓存"><span class="nav-number">10.</span> <span class="nav-text">linecache缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#threading多线程"><span class="nav-number">11.</span> <span class="nav-text">threading多线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqlite3数据库"><span class="nav-number">12.</span> <span class="nav-text">sqlite3数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gzip压缩解压"><span class="nav-number">13.</span> <span class="nav-text">gzip压缩解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tkinter"><span class="nav-number">14.</span> <span class="nav-text">tkinter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ipython"><span class="nav-number">15.</span> <span class="nav-text">ipython</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装："><span class="nav-number"></span> <span class="nav-text">安装：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用："><span class="nav-number"></span> <span class="nav-text">使用：</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weely.cc</p>
+  <div class="site-description" itemprop="description">黎人过客的小站</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weely.cc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
