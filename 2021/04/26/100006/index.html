@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="快速搭建ELK日志分析系统一、ELK搭建篇官网地址:https:&#x2F;&#x2F;www.elastic.co&#x2F;cn&#x2F; 官网权威指南:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;cn&#x2F;elasticsearch&#x2F;guide&#x2F;current&#x2F;index.html 安装指南：https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;elasticsearch&#x2F;reference&#x2F;5.x&#x2F;rpm.">
+  <meta name="description" content="前言ELK提供了一整套解决方案，并且都是开源软件，之间互相配合使用，完美衔接，高效的满足了很多场合的应用。目前主流的一种日志系统。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速搭建ELK日志分析系统">
 <meta property="og:url" content="http://blog.weely.cc/2021/04/26/100006/index.html">
 <meta property="og:site_name" content="黎人过客">
-<meta property="og:description" content="快速搭建ELK日志分析系统一、ELK搭建篇官网地址:https:&#x2F;&#x2F;www.elastic.co&#x2F;cn&#x2F; 官网权威指南:https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;cn&#x2F;elasticsearch&#x2F;guide&#x2F;current&#x2F;index.html 安装指南：https:&#x2F;&#x2F;www.elastic.co&#x2F;guide&#x2F;en&#x2F;elasticsearch&#x2F;reference&#x2F;5.x&#x2F;rpm.">
+<meta property="og:description" content="前言ELK提供了一整套解决方案，并且都是开源软件，之间互相配合使用，完美衔接，高效的满足了很多场合的应用。目前主流的一种日志系统。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170755587-1541111347.jpg">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/1181869/201706/1181869-20170615170808446-1582541148.png">
@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://common.cnblogs.com/images/wechat.png">
 <meta property="og:image" content="https://pic.cnblogs.com/face/1181869/20170616142315.png">
 <meta property="article:published_time" content="2021-04-25T16:12:43.116Z">
-<meta property="article:modified_time" content="2021-04-28T14:28:30.673Z">
+<meta property="article:modified_time" content="2021-04-29T13:24:29.746Z">
 <meta property="article:author" content="Weely.cc">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-28 22:28:30" itemprop="dateModified" datetime="2021-04-28T22:28:30+08:00">2021-04-28</time>
+                <time title="修改时间：2021-04-29 21:24:29" itemprop="dateModified" datetime="2021-04-29T21:24:29+08:00">2021-04-29</time>
               </span>
 
           
@@ -232,12 +232,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="快速搭建ELK日志分析系统"><a href="#快速搭建ELK日志分析系统" class="headerlink" title="快速搭建ELK日志分析系统"></a><a href="https://www.cnblogs.com/yuhuLin/p/7018858.html" target="_blank" rel="noopener">快速搭建ELK日志分析系统</a></h1><h1 id="一、ELK搭建篇"><a href="#一、ELK搭建篇" class="headerlink" title="一、ELK搭建篇"></a>一、ELK搭建篇</h1><p>官网地址:<a href="https://www.elastic.co/cn/" target="_blank" rel="noopener">https://www.elastic.co/cn/</a></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>ELK提供了一整套解决方案，并且都是开源软件，之间互相配合使用，完美衔接，高效的满足了很多场合的应用。目前主流的一种日志系统。</p>
+<a id="more"></a>
+
+<h2 id="一、ELK搭建篇"><a href="#一、ELK搭建篇" class="headerlink" title="一、ELK搭建篇"></a>一、ELK搭建篇</h2><p>官网地址:<a href="https://www.elastic.co/cn/" target="_blank" rel="noopener">https://www.elastic.co/cn/</a></p>
 <p>官网权威指南:<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html" target="_blank" rel="noopener">https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html</a></p>
 <p>安装指南：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.x/rpm.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/5.x/rpm.html</a></p>
 <p>ELK是Elasticsearch、Logstash、Kibana的简称，这三者是核心套件，但并非全部。</p>
-<a id="more"></a>
-
 <p>Elasticsearch是实时全文搜索和分析引擎，提供搜集、分析、存储数据三大功能；是一套开放REST和JAVA API等结构提供高效搜索功能，可扩展的分布式系统。它构建于Apache Lucene搜索引擎库之上。</p>
 <p>Logstash是一个用来搜集、分析、过滤日志的工具。它支持几乎任何类型的日志，包括系统日志、错误日志和自定义应用程序日志。它可以从许多来源接收日志，这些来源包括 syslog、消息传递（例如 RabbitMQ）和JMX，它能够以多种方式输出数据，包括电子邮件、websockets和Elasticsearch。</p>
 <p>Kibana是一个基于Web的图形界面，用于搜索、分析和可视化存储在 Elasticsearch指标中的日志数据。它利用Elasticsearch的REST接口来检索数据，不仅允许用户创建他们自己的数据的定制仪表板视图，还允许他们以特殊的方式查询和过滤数据</p>
@@ -412,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速搭建ELK日志分析系统"><span class="nav-number">1.</span> <span class="nav-text">快速搭建ELK日志分析系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、ELK搭建篇"><span class="nav-number">2.</span> <span class="nav-text">一、ELK搭建篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装elasticsearch的环境"><span class="nav-number">2.3.</span> <span class="nav-text">安装elasticsearch的环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.4.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何和elasticsearch交互"><span class="nav-number">2.5.</span> <span class="nav-text">如何和elasticsearch交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">2.6.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LogStash的使用"><span class="nav-number">2.7.</span> <span class="nav-text">LogStash的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash使用配置文件"><span class="nav-number">2.8.</span> <span class="nav-text">logstash使用配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash的数据库类型"><span class="nav-number">2.9.</span> <span class="nav-text">logstash的数据库类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kibana的安装及使用"><span class="nav-number">2.10.</span> <span class="nav-text">Kibana的安装及使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、ELK实战篇"><span class="nav-number">3.</span> <span class="nav-text">二、ELK实战篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三：ELK终极篇"><span class="nav-number">4.</span> <span class="nav-text">三：ELK终极篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上线ELK"><span class="nav-number">4.1.</span> <span class="nav-text">上线ELK</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、ELK搭建篇"><span class="nav-number">2.</span> <span class="nav-text">一、ELK搭建篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">3.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">4.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装elasticsearch的环境"><span class="nav-number">5.</span> <span class="nav-text">安装elasticsearch的环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">6.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何和elasticsearch交互"><span class="nav-number">7.</span> <span class="nav-text">如何和elasticsearch交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">8.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LogStash的使用"><span class="nav-number">9.</span> <span class="nav-text">LogStash的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash使用配置文件"><span class="nav-number">10.</span> <span class="nav-text">logstash使用配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logstash的数据库类型"><span class="nav-number">11.</span> <span class="nav-text">logstash的数据库类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kibana的安装及使用"><span class="nav-number">12.</span> <span class="nav-text">Kibana的安装及使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、ELK实战篇"><span class="nav-number"></span> <span class="nav-text">二、ELK实战篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三：ELK终极篇"><span class="nav-number"></span> <span class="nav-text">三：ELK终极篇</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上线ELK"><span class="nav-number">1.</span> <span class="nav-text">上线ELK</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -426,7 +427,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
