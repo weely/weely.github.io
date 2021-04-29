@@ -20,20 +20,18 @@
     var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言代码规范化，有助于我们减少bug，提高开发人员的开发效率，而代码风格检查（Code linting，简称Lint）是保障代码规范一致性的重要手段，根据之前工作经验，一般好的项目均会添加Lint环节，帮助团队更有效的协作，不过Lint环节部署不恰当，也会浪费开发人员不少时间。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="用 husky + lint-staged 构建代码检查工作流">
-<meta property="og:url" content="http://blog.weely.cc/2021/04/29/100011/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="熟悉vue框架的 keep-alive 组件">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/26/vue-keepalive/index.html">
 <meta property="og:site_name" content="黎人过客">
-<meta property="og:description" content="前言代码规范化，有助于我们减少bug，提高开发人员的开发效率，而代码风格检查（Code linting，简称Lint）是保障代码规范一致性的重要手段，根据之前工作经验，一般好的项目均会添加Lint环节，帮助团队更有效的协作，不过Lint环节部署不恰当，也会浪费开发人员不少时间。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-04-29T11:46:05.430Z">
-<meta property="article:modified_time" content="2021-04-29T13:25:21.951Z">
+<meta property="article:published_time" content="2021-04-26T14:38:55.214Z">
+<meta property="article:modified_time" content="2021-04-29T16:19:56.504Z">
 <meta property="article:author" content="Weely.cc">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://blog.weely.cc/2021/04/29/100011/">
+<link rel="canonical" href="http://blog.weely.cc/2021/04/26/vue-keepalive/">
 
 
 <script id="page-configurations">
@@ -46,7 +44,7 @@
   };
 </script>
 
-  <title>用 husky + lint-staged 构建代码检查工作流 | 黎人过客</title>
+  <title>熟悉vue框架的 keep-alive 组件 | 黎人过客</title>
   
 
 
@@ -167,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/29/100011/">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/26/vue-keepalive/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -180,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          用 husky + lint-staged 构建代码检查工作流
+          熟悉vue框架的 keep-alive 组件
         </h1>
 
         <div class="post-meta">
@@ -189,10 +187,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-04-29 19:46:05 / 修改时间：21:25:21" itemprop="dateCreated datePublished" datetime="2021-04-29T19:46:05+08:00">2021-04-29</time>
+              <time title="创建时间：2021-04-26 22:38:55" itemprop="dateCreated datePublished" datetime="2021-04-26T22:38:55+08:00">2021-04-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-30 00:19:56" itemprop="dateModified" datetime="2021-04-30T00:19:56+08:00">2021-04-30</time>
+              </span>
 
           
 
@@ -205,37 +209,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>代码规范化，有助于我们减少bug，提高开发人员的开发效率，而代码风格检查（Code linting，简称Lint）是保障代码规范一致性的重要手段，根据之前工作经验，一般好的项目均会添加Lint环节，帮助团队更有效的协作，不过Lint环节部署不恰当，也会浪费开发人员不少时间。</p>
-<a id="more"></a>
+        <a id="more"></a>
 
-<h2 id="Lint是什么？"><a href="#Lint是什么？" class="headerlink" title="Lint是什么？"></a>Lint是什么？</h2><p>简单来说，Lint 就是对代码做静态分析，并试图找出潜在问题的工具，实战中我们也用 Lint 来指使用工具的过程。</p>
-<h2 id="为什么要Lint？"><a href="#为什么要Lint？" class="headerlink" title="为什么要Lint？"></a>为什么要Lint？</h2><p>使用 Lint 会有什么好处呢？通过以往经验及查阅相关资料可以总结至少有以下几处有点：</p>
-<ul>
-<li>更少的 Bug，Lint代码提交阶段能帮我们发现一些语法上的错误及不规范的现象</li>
-<li>更高的开发效率，工程师平均会花掉 50% 的工作时间定位和解决各种 Bug，其中不乏那些显而易见的低级错误，而 Lint 很容易发现低级的、显而易见的错误；</li>
-<li>更高的可读性，代码可读性的首要因子是“表面文章”，表面上看起来乱糟糟的代码通常更难读懂；</li>
-</ul>
-<p>因此，项目添加Lint检查，非常有必要。</p>
-<h2 id="配置Lint"><a href="#配置Lint" class="headerlink" title="配置Lint"></a>配置Lint</h2><p>为了缩短 Lint 的反馈链条，把 Lint 挪到本地是最有效的办法。常见做法是使用 husky 或者 pre-commit 在本地提交之前做 Lint。</p>
-<p><strong>使用 husky 的具体做法如下：</strong></p>
-<ul>
-<li>首先，安装依赖：  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm install -D husky</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; lint-staged 可以让husky只检验git工作区的文件，不会导致你一下出现成百上千个错误，推荐安装</span><br><span class="line">npm install -D lint-staged</span><br></pre></td></tr></table></figure></li>
-<li>然后修改 package.json，增加配置：  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">	&quot;precommit&quot;: &quot;eslint src&#x2F;**&#x2F;*.js&quot;</span><br><span class="line">&#125;</span><br><span class="line">&quot;husky&quot;: &#123;</span><br><span class="line">  &quot;hooks&quot;: &#123;</span><br><span class="line">    &quot;pre-commit&quot;: &quot;lint-staged&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;lint-staged&quot;: &#123;</span><br><span class="line">  &quot;src&#x2F;**&#x2F;*.&#123;js,vue&#125;&quot;: [&quot;prettier --write&quot;, &quot;eslint --cache --fix&quot;, &quot;git add&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>最后尝试提交 <code>git commit -m &quot;commit code&quot;</code>，commit阶段就会触发githook钩子，检查代码是否符合配置的lint规范，不符合就会终止提交，修复错误后即可成功提交了。</li>
-</ul>
-<p><strong>针对通过vue-cli4创建的项目，vue-cli脚手架需要使用尤大的 yorkie ，具体使用方法如下：</strong></p>
-<blockquote>
-<p>vue-cli官网说明：<a href="https://cli.vuejs.org/zh/guide/cli-service.html#git-hook" target="_blank" rel="noopener">vue-cli4官方链接</a></p>
-</blockquote>
-<ul>
-<li><p>首先安装 yorkie 及 lint-staged：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -D yorkie</span><br><span class="line">npm install -D lint-staged</span><br></pre></td></tr></table></figure></li>
-<li><p>然后修改 package.json ，添加配置：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;gitHooks&quot;: &#123;</span><br><span class="line">    &quot;pre-commit&quot;: &quot;lint-staged&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">   &quot;lint-staged&quot;: &#123;</span><br><span class="line">    &quot;*.&#123;js,vue&#125;&quot;: [</span><br><span class="line">      &quot;vue-cli-service lint&quot;,</span><br><span class="line">      &quot;git add&quot;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>最后也是一样提交代码，修复不满足规范的代码重新提交即可。</p>
-</li>
-</ul>
-<p><em>参考链接：</em><br><a href="https://cli.vuejs.org/zh/guide/cli-service.html#git-hook" target="_blank" rel="noopener">Vue CLI官网#Git Hook</a><br><a href="https://segmentfault.com/a/1190000009546913" target="_blank" rel="noopener">用 husky 和 lint-staged 构建超溜的代码检查工作流</a><br><a href="https://mp.weixin.qq.com/s/B5aX-hTYHz8v8DHskQjuiA" target="_blank" rel="noopener">一套非常标准的前端代码工作流</a></p>
 
     </div>
 
@@ -251,10 +226,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/29/100010/" rel="prev" title="解决无法访问Github的问题">
-      <i class="fa fa-chevron-left"></i> 解决无法访问Github的问题
+    <a href="/2021/04/26/elk-intro/" rel="prev" title="快速搭建ELK日志分析系统">
+      <i class="fa fa-chevron-left"></i> 快速搭建ELK日志分析系统
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/26/py-intro/" rel="next" title="python常用模块库">
+      python常用模块库 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -313,7 +291,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lint是什么？"><span class="nav-number">2.</span> <span class="nav-text">Lint是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要Lint？"><span class="nav-number">3.</span> <span class="nav-text">为什么要Lint？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置Lint"><span class="nav-number">4.</span> <span class="nav-text">配置Lint</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -333,6 +310,11 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/weely" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;weely" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 

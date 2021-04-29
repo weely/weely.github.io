@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="黎人过客的小站">
-<meta property="og:type" content="website">
-<meta property="og:title" content="黎人过客">
-<meta property="og:url" content="http://blog.weely.cc/archives/2021/index.html">
+  <meta name="description" content="前言主要介绍通过git怎样查看项目总代码量，查看个人代码量，仓库提交者排名，每个人增删行数，提交数统计，添加或修改的代码行数等等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git代码统计">
+<meta property="og:url" content="http://blog.weely.cc/2021/04/25/git-stats/index.html">
 <meta property="og:site_name" content="黎人过客">
-<meta property="og:description" content="黎人过客的小站">
+<meta property="og:description" content="前言主要介绍通过git怎样查看项目总代码量，查看个人代码量，仓库提交者排名，每个人增删行数，提交数统计，添加或修改的代码行数等等。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-25T13:22:45.347Z">
+<meta property="article:modified_time" content="2021-04-29T16:17:13.427Z">
 <meta property="article:author" content="Weely.cc">
 <meta property="article:tag" content="blog">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://blog.weely.cc/archives/2021/">
+<link rel="canonical" href="http://blog.weely.cc/2021/04/25/git-stats/">
 
 
 <script id="page-configurations">
@@ -39,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 黎人过客</title>
+  <title>git代码统计 | 黎人过客</title>
   
 
 
@@ -158,250 +160,98 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 12 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/04/25/git-stats/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="黎人过客的小站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          git代码统计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-25 21:22:45" itemprop="dateCreated datePublished" datetime="2021-04-25T21:22:45+08:00">2021-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-30 00:17:13" itemprop="dateModified" datetime="2021-04-30T00:17:13+08:00">2021-04-30</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要介绍通过git怎样查看项目总代码量，查看个人代码量，仓库提交者排名，每个人增删行数，提交数统计，添加或修改的代码行数等等。</p>
+<a id="more"></a>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-29T19:46:05+08:00"
-              content="2021-04-29">
-          04-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/29/husky-lint/" itemprop="url">
-            <span itemprop="name">用 husky + lint-staged 构建代码检查工作流</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-29T19:46:01+08:00"
-              content="2021-04-29">
-          04-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/29/git-access-fix/" itemprop="url">
-            <span itemprop="name">解决无法访问Github的问题</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-28T20:07:40+08:00"
-              content="2021-04-28">
-          04-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/28/vue-performance-opt/" itemprop="url">
-            <span itemprop="name">vue项目性能优化</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-26T22:41:11+08:00"
-              content="2021-04-26">
-          04-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/26/py-intro/" itemprop="url">
-            <span itemprop="name">python常用模块库</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-26T22:38:55+08:00"
-              content="2021-04-26">
-          04-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/26/vue-keepalive/" itemprop="url">
-            <span itemprop="name">熟悉vue框架的 keep-alive 组件</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-26T00:12:43+08:00"
-              content="2021-04-26">
-          04-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/26/elk-intro/" itemprop="url">
-            <span itemprop="name">快速搭建ELK日志分析系统</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-25T21:22:45+08:00"
-              content="2021-04-25">
-          04-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/25/commit-rules/" itemprop="url">
-            <span itemprop="name">git代码提交规范</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-25T21:22:45+08:00"
-              content="2021-04-25">
-          04-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/25/git-stats/" itemprop="url">
-            <span itemprop="name">git代码统计</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-24T20:10:44+08:00"
-              content="2021-04-24">
-          04-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/24/vue-lifecycle/" itemprop="url">
-            <span itemprop="name">vue生命周期详解</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-24T01:04:20+08:00"
-              content="2021-04-24">
-          04-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/24/vue-theory/" itemprop="url">
-            <span itemprop="name">vue数据双向绑定原理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-04-22T22:27:55+08:00"
-              content="2021-04-22">
-          04-22
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/04/22/markdown-intro/" itemprop="url">
-            <span itemprop="name">Markdown语法简介</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<blockquote>
+<p>提示：git使用命令行查看代码统计时，window环境下使用cmd若出错，建议使用git bash来执行相应指令查询</p>
+</blockquote>
+<h3 id="查看项目总代码量"><a href="#查看项目总代码量" class="headerlink" title="查看项目总代码量"></a>查看项目总代码量</h3><p><code>git log --author=&quot;&quot; --pretty=tformat: --numstat | awk &#39;{ add += $1;subs += $2; loc += $1 - $2 } END { printf &quot;added lines: %s, removed lines: %s, total lines: %s\n&quot;, add, subs, loc }&#39;</code></p>
+<h3 id="查看个人代码量"><a href="#查看个人代码量" class="headerlink" title="查看个人代码量"></a>查看个人代码量</h3><p>将username用户名参数替换成自己的用户名即可<br><code>git log --author=&quot;username&quot; --pretty=tformat: --numstat | awk &#39;{ add += $1; subs += $2; loc += $1 - $2 } END { printf &quot;added lines: %s, removed lines: %s, total lines: %s\n&quot;, add, subs, loc }&#39;</code></p>
+<h3 id="查看仓库提交者排名前-5"><a href="#查看仓库提交者排名前-5" class="headerlink" title="查看仓库提交者排名前 5"></a>查看仓库提交者排名前 5</h3><p><code>git log --pretty=&#39;%aN&#39; | sort | uniq -c | sort -k1 -n -r | head -n 5</code></p>
+<h3 id="查看每个人增删行数"><a href="#查看每个人增删行数" class="headerlink" title="查看每个人增删行数"></a>查看每个人增删行数</h3><p><code>git log --format=&#39;%aN&#39; | sort -u | while read name; do echo -en &quot;$name\t&quot;; git log --author=&quot;$name&quot; --pretty=tformat: --numstat | awk &#39;{ add += $1; subs += $2; loc += $1 - $2 } END { printf &quot;added lines: %s, removed lines: %s, total lines: %s\n&quot;, add, subs, loc }&#39; -; done</code></p>
+<h3 id="提交数统计"><a href="#提交数统计" class="headerlink" title="提交数统计"></a>提交数统计</h3><p><code>git log --oneline | wc -l</code>e</p>
+<h2 id="添加或修改的代码行数"><a href="#添加或修改的代码行数" class="headerlink" title="添加或修改的代码行数"></a>添加或修改的代码行数</h2><p><code>git log --stat|perl -ne &#39;END { print $c } $c += $1 if /(\d+) insertions/&#39;</code></p>
+<p>参考文献：<br><a href="https://blog.csdn.net/weixin_34336526/article/details/89079043" target="_blank" rel="noopener">https://blog.csdn.net/weixin_34336526/article/details/89079043</a></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/24/vue-lifecycle/" rel="prev" title="vue生命周期详解">
+      <i class="fa fa-chevron-left"></i> vue生命周期详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/25/commit-rules/" rel="next" title="git代码提交规范">
+      git代码提交规范 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -454,6 +304,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看项目总代码量"><span class="nav-number">1.1.</span> <span class="nav-text">查看项目总代码量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看个人代码量"><span class="nav-number">1.2.</span> <span class="nav-text">查看个人代码量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看仓库提交者排名前-5"><span class="nav-number">1.3.</span> <span class="nav-text">查看仓库提交者排名前 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看每个人增删行数"><span class="nav-number">1.4.</span> <span class="nav-text">查看每个人增删行数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交数统计"><span class="nav-number">1.5.</span> <span class="nav-text">提交数统计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加或修改的代码行数"><span class="nav-number">2.</span> <span class="nav-text">添加或修改的代码行数</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
