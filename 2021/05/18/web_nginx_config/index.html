@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="现代web项目一般采用前后端分离架构，前端通过脚手架构建项目，而前端项目一般可分为单页面应用多页面应用，下面就关于vue单页面及多页面应用nginx的配置做一些说明：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue单页面及多页面应用nginx的配置">
+<meta property="og:url" content="http://blog.weely.cc/2021/05/18/web_nginx_config/index.html">
+<meta property="og:site_name" content="黎人过客">
+<meta property="og:description" content="现代web项目一般采用前后端分离架构，前端通过脚手架构建项目，而前端项目一般可分为单页面应用多页面应用，下面就关于vue单页面及多页面应用nginx的配置做一些说明：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-18T14:17:24.273Z">
+<meta property="article:modified_time" content="2021-05-20T13:37:47.708Z">
+<meta property="article:author" content="Weely.cc">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.weely.cc/2021/05/18/web_nginx_config/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>vue单页面及多页面应用nginx的配置 | 黎人过客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">黎人过客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">好记性不如烂笔头</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.weely.cc/2021/05/18/web_nginx_config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Weely.cc">
+      <meta itemprop="description" content="基于hexo + next的个人博客系统">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黎人过客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vue单页面及多页面应用nginx的配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-18 22:17:24" itemprop="dateCreated datePublished" datetime="2021-05-18T22:17:24+08:00">2021-05-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-20 21:37:47" itemprop="dateModified" datetime="2021-05-20T21:37:47+08:00">2021-05-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>现代web项目一般采用前后端分离架构，前端通过脚手架构建项目，而前端项目一般可分为单页面应用多页面应用，下面就关于vue单页面及多页面应用nginx的配置做一些说明：</p>
+<a id="more"></a>
+
+<ul>
+<li><strong>单页面应用（single page web application,SPA）</strong>打包后一般为一个html文件，页面路由有js控制，路由跳转实际上是js控制动态的在html中切换dom</li>
+<li><strong>多页面应用（multi page web application,MPA）</strong>由多个html文件组成，浏览器访问的是对于服务器的html文件，每个页面都可作为是一个单页面应用</li>
+</ul>
+<h3 id="单页面应用"><a href="#单页面应用" class="headerlink" title="单页面应用"></a>单页面应用</h3><p>单页面应用一般默认打包到 <code>index.html</code> 文件中，单页面应用项目结构使用官网即可</p>
+<ul>
+<li><p>项目结构<br>单页面应用项目结构使用脚手架默认生成的即可，这里简单介绍示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">|-- app</span><br><span class="line">    |-- .env.development           &#x2F;&#x2F; 配置文件</span><br><span class="line">    |-- .env.production            &#x2F;&#x2F; 配置文件</span><br><span class="line">    |-- .gitignore</span><br><span class="line">    |-- babel.config.js</span><br><span class="line">    |-- package.json</span><br><span class="line">    |-- public					   &#x2F;&#x2F; 公共文件，若未被引入，打包会直接转移到dist</span><br><span class="line">    |-- README.md</span><br><span class="line">    |-- vue.config.js              &#x2F;&#x2F; vue-cli配置文件</span><br><span class="line">    |-- dist                       &#x2F;&#x2F; 打包后目录</span><br><span class="line">    |-- public                     &#x2F;&#x2F; 公共资源文件</span><br><span class="line">    	|-- favicon.ico			   &#x2F;&#x2F; 入口模板文件</span><br><span class="line">    |-- src                        &#x2F;&#x2F; 源码</span><br><span class="line">        |-- favicon.ico</span><br><span class="line">        |-- api                    &#x2F;&#x2F; api层</span><br><span class="line">        |-- assets                 &#x2F;&#x2F; 静态资源</span><br><span class="line">        |   |-- images             &#x2F;&#x2F; 图片资源</span><br><span class="line">        |-- components             &#x2F;&#x2F; 组件</span><br><span class="line">        |-- config                 &#x2F;&#x2F; 公共配置</span><br><span class="line">        |-- router                 &#x2F;&#x2F; 路由</span><br><span class="line">        |-- styles                 &#x2F;&#x2F; 公共样式</span><br><span class="line">        |-- store                  &#x2F;&#x2F; 状态管理</span><br><span class="line">        |   |-- getters.js</span><br><span class="line">        |   |-- index.js</span><br><span class="line">        |   |-- modules</span><br><span class="line">        |-- utils                  &#x2F;&#x2F; 工具库</span><br><span class="line">        |-- views                  &#x2F;&#x2F; 视图层</span><br><span class="line">        |   |-- index              &#x2F;&#x2F; 首页视图</span><br><span class="line">        |   |-- test               &#x2F;&#x2F; 测试页视图</span><br><span class="line">        |   |   ...</span><br><span class="line">        |-- App.vue                &#x2F;&#x2F; vue的app挂载入口</span><br><span class="line">        |-- main.js                &#x2F;&#x2F; 入口文件</span><br></pre></td></tr></table></figure></li>
+<li><p>nginx配置<br>以下配置兼容 history 模式下页面刷新，防止页面重定向到配置的 404 页面或首页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80 ;</span><br><span class="line">  server_name www.domain.com;</span><br><span class="line"></span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">    root &#x2F;data&#x2F;web&#x2F;dist;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">    # try_files 控制匹配不到 $url 或 $uri&#x2F; 跳转到 &#x2F;index.html 文件</span><br><span class="line">    try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="多页面应用"><a href="#多页面应用" class="headerlink" title="多页面应用"></a>多页面应用</h3><p>针对通过vue-cli构建的项目，多页面应用需要调整项目结构以及打包配置</p>
+<ul>
+<li><p>项目结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">|-- app</span><br><span class="line">    |-- .env.development           &#x2F;&#x2F; 配置文件</span><br><span class="line">    |-- .env.production            &#x2F;&#x2F; 配置文件</span><br><span class="line">    |-- .gitignore</span><br><span class="line">    |-- babel.config.js</span><br><span class="line">    |-- package.json</span><br><span class="line">    |-- public					   &#x2F;&#x2F; 公共文件，若未被引入，打包会直接转移到dist</span><br><span class="line">    |-- README.md</span><br><span class="line">    |-- vue.config.js              &#x2F;&#x2F; vue-cli配置文件</span><br><span class="line">    |-- dist                       &#x2F;&#x2F; 打包后目录</span><br><span class="line">    |-- src                        &#x2F;&#x2F; 项目源码</span><br><span class="line">        |-- favicon.ico</span><br><span class="line">        |-- api                    &#x2F;&#x2F; 项目api层</span><br><span class="line">        |-- assets                 &#x2F;&#x2F; 项目公共的静态资源</span><br><span class="line">        |   |-- images             &#x2F;&#x2F; 项目图片资源</span><br><span class="line">        |   |-- libs               &#x2F;&#x2F; 项目公共库</span><br><span class="line">        |   |-- media              &#x2F;&#x2F; 项目的多媒体资源</span><br><span class="line">        |-- components             &#x2F;&#x2F; 项目的公共组件</span><br><span class="line">        |-- config                 &#x2F;&#x2F; 项目的公共配置</span><br><span class="line">        |-- pages                  &#x2F;&#x2F; 多页面应用</span><br><span class="line">        |   |-- index             &#x2F;&#x2F; 首页页面</span><br><span class="line">        |   |   |-- Layout         &#x2F;&#x2F; 页面的公共布局</span><br><span class="line">        |   |   |-- App.vue        &#x2F;&#x2F; vue的app挂载入口</span><br><span class="line">        |   |   |-- index.html     &#x2F;&#x2F; 当前页的入口文件模板</span><br><span class="line">        |   |   |-- main.js        &#x2F;&#x2F; 当前页的入口文件</span><br><span class="line">        |   |   |-- permission.js  &#x2F;&#x2F; 权限控制</span><br><span class="line">        |   |   |-- router         &#x2F;&#x2F; 路由</span><br><span class="line">        |   |   |-- store          &#x2F;&#x2F; 状态管理</span><br><span class="line">        |   |   |-- views          &#x2F;&#x2F; 视图</span><br><span class="line">        |   |-- test               &#x2F;&#x2F; 测试页</span><br><span class="line">        |   |   |-- ...            &#x2F;&#x2F; 同上</span><br><span class="line">        |-- store                  &#x2F;&#x2F; 公共的状态管理</span><br><span class="line">        |   |-- getters.js</span><br><span class="line">        |   |-- index.js</span><br><span class="line">        |   |-- modules</span><br><span class="line">        |       |-- app.js</span><br><span class="line">        |-- styles                 &#x2F;&#x2F; 公共的样式</span><br><span class="line">        |-- utils                  &#x2F;&#x2F; 公共工具库</span><br></pre></td></tr></table></figure></li>
+<li><p>router.js配置<br>router.js中采用 <strong>history</strong> 模式时，router的base路径需要配置，以上面目录结构示例router配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; test页面router.js中路由配置示例：</span><br><span class="line">const createRouter &#x3D; () &#x3D;&gt; new Router(&#123;</span><br><span class="line">  mode: &#39;history&#39;,</span><br><span class="line">  base: &#39;&#x2F;test&#x2F;&#39;,   &#x2F;&#x2F; test页基础路径</span><br><span class="line">  routes: [&#123;</span><br><span class="line">    path: &#39;&#x2F;&#39;,    &#x2F;&#x2F; test页首页路由</span><br><span class="line">    component: () &#x3D;&gt; import (&#39;@&#x2F;components&#x2F;Layout&#39;),</span><br><span class="line">    children: [&#123;</span><br><span class="line">      path: &#39;&#39;,   &#x2F;&#x2F; test页首页路由（为空即为上一层级默认路由）</span><br><span class="line">      component: () &#x3D;&gt; import (&#39;..&#x2F;views&#x2F;test&#x2F;index&#39;),</span><br><span class="line">      name: &#39;test&#39;,</span><br><span class="line">      meta: &#123; title: &#39;测试页&#39; &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">  &#125;,]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">const router &#x3D; createRouter()</span><br><span class="line">export default router</span><br></pre></td></tr></table></figure></li>
+<li><p>vue.config.js调整配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 调整入口文件配置</span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">	pages: pages,</span><br><span class="line">    index: &#123;</span><br><span class="line">      &#x2F;&#x2F; page 的入口</span><br><span class="line">      entry: &#39;src&#x2F;pages&#x2F;index&#x2F;main.js&#39;,</span><br><span class="line">      &#x2F;&#x2F; 模板来源（路径可调，可模板文件直接放在public目录中，路径对应上即可）</span><br><span class="line">      template: &#39;src&#x2F;pages&#x2F;index&#x2F;index.html&#39;,</span><br><span class="line">      &#x2F;&#x2F; 在 dist&#x2F;index.html 的输出</span><br><span class="line">      filename: &#39;index.html&#39;,</span><br><span class="line">      &#x2F;&#x2F; 当使用 title 选项时，</span><br><span class="line">      &#x2F;&#x2F; template 中的 title 标签需要是 &lt;title&gt;&lt;%&#x3D; htmlWebpackPlugin.options.title %&gt;&lt;&#x2F;title&gt;</span><br><span class="line">      title: &#39;首页&#39;,</span><br><span class="line">      &#x2F;&#x2F; 在这个页面中包含的块，默认情况下会包含</span><br><span class="line">      &#x2F;&#x2F; 提取出来的通用 chunk 和 vendor chunk。</span><br><span class="line">      chunks: [&#39;chunk-vendors&#39;, &#39;chunk-common&#39;, &#39;index&#39;]</span><br><span class="line">	&#125;,</span><br><span class="line">  &#x2F;&#x2F; 当使用只有入口的字符串格式时，</span><br><span class="line">  &#x2F;&#x2F; 模板会被推导为 &#96;public&#x2F;test.html&#96;</span><br><span class="line">  &#x2F;&#x2F; 并且如果找不到的话，就回退到 &#96;public&#x2F;index.html&#96;。</span><br><span class="line">  &#x2F;&#x2F; 输出文件名会被推导为 &#96;test.html&#96;。</span><br><span class="line">  test: &#39;src&#x2F;test&#x2F;main.js&#39;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>nginx配置<br>多页面应用使用 history 模式，加上以下配置，也可避免出现页面刷新页面跳转404或配置的首页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80 ;</span><br><span class="line">  server_name www.domain.com;</span><br><span class="line"></span><br><span class="line">  root &#x2F;data&#x2F;web&#x2F;dist;</span><br><span class="line"></span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">    # try_files 控制匹配不到 $url 或 $uri&#x2F; 跳转到 &#x2F;index.html 文件</span><br><span class="line">    try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location &#x2F;test &#123;</span><br><span class="line">    index  index.html index.htm;</span><br><span class="line">    try_files $uri $uri&#x2F; $uri.html &#x2F;test&#x2F;index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="api代理nginx配置"><a href="#api代理nginx配置" class="headerlink" title="api代理nginx配置"></a>api代理nginx配置</h3><p>现代web项目一般都是前端后分离，前后端分离，前端请求api主流使用 <strong>ajax 或 axios</strong>，使用者两者时，涉及js请求接口跨域配置可通过 <strong>nginx配置反向代理</strong> 来解决</p>
+<ul>
+<li>nginx反向代理api配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;pro-api&#x2F; &#123;</span><br><span class="line">  rewrite ^&#x2F;pro-api&#x2F;(.*)$ &#x2F;$1 break;</span><br><span class="line">  proxy_pass 后端api接口域名;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>之前项目中，发现开发中使用 <strong>history</strong> 模式，页面刷新能正常访问，而项目上线后，<strong>nginx</strong> 未对每个页面配置，导致页面刷新会重定向到设置的 <strong>404 页面</strong>，经过一番尝试后，发现是因为 <strong>nginx</strong> 匹配不到多页面（例如其中的<code>/test/add</code>路由），<strong>nginx</strong> 未配置前只能识别项目中生成的 <code>test/index.html</code> 文件，所以能正常访问 <code>http://domain.com/test</code>，前端切换至 <code>http://domain.com/test/add</code> 页面为前端路由控制，而刷新 <code>http://domain.com/test/add</code> 页面为 <strong>nginx</strong> 适配，未配置前 <strong>nginx</strong> 无法适配，所以会重定向到 <strong>404 页面</strong>，而 <strong>nginx</strong> 加上以下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;test &#123;</span><br><span class="line">  index  index.html index.htm;</span><br><span class="line">  try_files $uri $uri&#x2F; $uri.html &#x2F;test&#x2F;index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>nginx会适配 <code>/test/add</code> 到 <code>/test/index.html</code>, 而 <code>/test/index.html</code> 文件即能跳转到对应得add模块，所以页面刷新即可正常访问 /test/index.html 页面了</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"># vue</a>
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/16/screen_size/" rel="prev" title="web前端屏幕各种宽高的获取方法介绍">
+      <i class="fa fa-chevron-left"></i> web前端屏幕各种宽高的获取方法介绍
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#单页面应用"><span class="nav-number">1.</span> <span class="nav-text">单页面应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多页面应用"><span class="nav-number">2.</span> <span class="nav-text">多页面应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#api代理nginx配置"><span class="nav-number">3.</span> <span class="nav-text">api代理nginx配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weely.cc</p>
+  <div class="site-description" itemprop="description">基于hexo + next的个人博客系统</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/weely" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;weely" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weely.cc</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

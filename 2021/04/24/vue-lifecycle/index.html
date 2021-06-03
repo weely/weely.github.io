@@ -20,18 +20,22 @@
     var CONFIG = {"hostname":"blog.weely.cc","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="vue生命周期详解">
+  <meta name="description" content="每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做 生命周期钩子 的函数，这给了用户在不同阶段添加自己的代码的机会。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="vue生命周期详解">
 <meta property="og:url" content="http://blog.weely.cc/2021/04/24/vue-lifecycle/index.html">
 <meta property="og:site_name" content="黎人过客">
-<meta property="og:description" content="vue生命周期详解">
+<meta property="og:description" content="每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做 生命周期钩子 的函数，这给了用户在不同阶段添加自己的代码的机会。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cn.vuejs.org/images/lifecycle.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/11/joldFtOLwE3i4BY.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/11/GR8WX5JKBoIf7Tu.png">
 <meta property="article:published_time" content="2021-04-24T12:10:44.946Z">
-<meta property="article:modified_time" content="2021-04-29T16:21:14.662Z">
+<meta property="article:modified_time" content="2021-05-16T11:05:42.686Z">
 <meta property="article:author" content="Weely.cc">
-<meta property="article:tag" content="blog">
+<meta property="article:tag" content="vue">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cn.vuejs.org/images/lifecycle.png">
 
 <link rel="canonical" href="http://blog.weely.cc/2021/04/24/vue-lifecycle/">
 
@@ -172,7 +176,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Weely.cc">
-      <meta itemprop="description" content="黎人过客的小站">
+      <meta itemprop="description" content="基于hexo + next的个人博客系统">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -197,10 +201,26 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-30 00:21:14" itemprop="dateModified" datetime="2021-04-30T00:21:14+08:00">2021-04-30</time>
+                <time title="修改时间：2021-05-16 19:05:42" itemprop="dateModified" datetime="2021-05-16T19:05:42+08:00">2021-05-16</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+            </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -211,9 +231,49 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>vue生命周期详解</p>
+        <p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做 <strong>生命周期钩子</strong> 的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
 <a id="more"></a>
 
+<h3 id="官方文档生命周期图示"><a href="#官方文档生命周期图示" class="headerlink" title="官方文档生命周期图示"></a>官方文档生命周期图示</h3><p>先上官方流程图大概熟悉下整个生命周期流程<br><img src="https://cn.vuejs.org/images/lifecycle.png" alt="vue生命周期图解"></p>
+<p>通过官方说明图，可见vue整个生命周期中会有很多<strong>钩子函数</strong>，暂时先列出生命周期钩子函数，然后我们一一加以说明：</p>
+<ul>
+<li>beforeCreate</li>
+<li>created</li>
+<li>beforeMount</li>
+<li>mounted</li>
+<li>deforeUpdate</li>
+<li>updated</li>
+<li>beforeDestory</li>
+<li>destiryed</li>
+<li><em>如果使用了keep-alive组件，生命周期还会有以下两个 <em>钩子函数</em> ，同时执行过程也会稍有不同，具体细节待一一说明：</em>*</li>
+<li>activated</li>
+<li>deactivated</li>
+</ul>
+<h3 id="各钩子函数详解"><a href="#各钩子函数详解" class="headerlink" title="各钩子函数详解"></a>各钩子函数详解</h3><p>先上代码如下（注意示例为通过脚手架新建的项目，编辑App.vue文件）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;app&quot;&gt;</span><br><span class="line">  &#123;&#123; message &#125;&#125;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#39;App&#39;,</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      message: &#39;demo&#39;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  beforeCreate() &#123;</span><br><span class="line">    console.log(&#39;----beforeCreate----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  created() &#123;</span><br><span class="line">    console.log(&#39;----created----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">    window.vm &#x3D; this</span><br><span class="line">  &#125;,</span><br><span class="line">  beforeMount() &#123;</span><br><span class="line">    console.log(&#39;----beforeMount----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  mounted()&#123;</span><br><span class="line">    console.log(&#39;----mounted----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  beforeUpdate()&#123;</span><br><span class="line">    console.log(&#39;----beforeUpdate----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  updated()&#123;</span><br><span class="line">    console.log(&#39;----updated----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  beforeDestroy()&#123;</span><br><span class="line">    console.log(&#39;----beforeDestroy----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">    console.log(this.$data)</span><br><span class="line">    console.log(this.message)</span><br><span class="line">  &#125;,</span><br><span class="line">  destroyed()&#123;</span><br><span class="line">    console.log(&#39;----destroyed----&#39;)</span><br><span class="line">    console.log(this.$el)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<p>按F12打开调试窗口，运行后在console中可见打印结果如下：<br><img src="https://i.loli.net/2021/05/11/joldFtOLwE3i4BY.png" alt="打印结果1.png"></p>
+<p>可见在vue实例创建过长中会调用beforeCreate,created,beforeMount,Mounted等几个生命周期钩子函数</p>
+<h4 id="1-beforeCreate"><a href="#1-beforeCreate" class="headerlink" title="1. beforeCreate"></a>1. beforeCreate</h4><p>根据打印结果可见，beforeCreated钩子函数为初始化准备阶段，dom、data等均未绑定</p>
+<h4 id="2-created"><a href="#2-created" class="headerlink" title="2. created"></a>2. created</h4><p>created阶段 <strong>data属性</strong> 已经绑定，$el对象即dom未挂载，created阶段能操作 <strong>data属性</strong> 中的属性值。</p>
+<h4 id="3-beforeMounte"><a href="#3-beforeMounte" class="headerlink" title="3. beforeMounte"></a>3. beforeMounte</h4><p>该阶段首先会判断对象是否有el选项。如果有的话就继续向下编译，如果没有el选项，则停止编译，也就意味着停止了生命周期，直到在该vue实例上调用vm.$mount(el)。(脚手架工具搭建项目入口文件中会直接调用$mount(el)来触发钩子函数)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">new Vue(&#123;</span><br><span class="line">  el: &#39;#app&#39;,</span><br><span class="line">  render: h &#x3D;&gt; h(App),</span><br><span class="line">&#125;);</span><br><span class="line">&#x2F;&#x2F; 或者</span><br><span class="line">&#x2F;&#x2F;new Vue(&#123;</span><br><span class="line">&#x2F;&#x2F;  render: h &#x3D;&gt; h(App),</span><br><span class="line">&#x2F;&#x2F;&#125;).$mount(&#39;#app&#39;)</span><br></pre></td></tr></table></figure>
+<p>然后，我们往下看，template参数选项的有无对生命周期的影响。(可以通过测试删除template打印结果来查看)<br>（1）如果vue实例对象中有template参数选项，则将其作为模板编译成render函数。<br>（2）如果没有template选项，则将外部HTML作为模板编译。<br>（3）可以看到template中的模板优先级要高于outer HTML的优先级。</p>
+<blockquote>
+<p>所以综合排名优先级：<br>render函数选项 &gt; template选项 &gt; outer HTML.</p>
+</blockquote>
+<h4 id="4-mounted"><a href="#4-mounted" class="headerlink" title="4. mounted"></a>4. mounted</h4><p>mounted阶段el已经被挂载到了dom，完成了数据及视图间的双向绑定，message属性值变化，绑定了message也会跟随变化</p>
+<h4 id="5-beforeUpdate及updated钩子函数"><a href="#5-beforeUpdate及updated钩子函数" class="headerlink" title="5. beforeUpdate及updated钩子函数"></a>5. beforeUpdate及updated钩子函数</h4><p>当vue发现data中的数据发生了改变，会触发对应组件的重新渲染，先后调用beforeUpdate和updated钩子函数。我们在console中输入：<br><code>vm.message = &#39;hello vue&#39;</code><br>发现触发了组件的更新，console打印结果如下，<br><img src="https://i.loli.net/2021/05/11/GR8WX5JKBoIf7Tu.png" alt="打印结果2.png"></p>
+<h4 id="6-beforeDestory和destoryed钩子函数"><a href="#6-beforeDestory和destoryed钩子函数" class="headerlink" title="6. beforeDestory和destoryed钩子函数"></a>6. beforeDestory和destoryed钩子函数</h4><p><strong>foreDestroy</strong> 钩子函数在实例销毁之前调用。在这一步，实例仍然完全可用。<br><strong>stroyed</strong> 钩子函数在Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。</p>
+<h4 id="7-activated-和-deactivated"><a href="#7-activated-和-deactivated" class="headerlink" title="7. activated 和 deactivated"></a>7. activated 和 deactivated</h4><p>如果使用了keep-alive组件，vue实例生命周期钩子函数执行流程会稍有差别，主要体现在第二次进入组件阶段。</p>
+<blockquote>
+<ul>
+<li>使用keep-alive组件的动态组件:<br>生命周期执行依次为 beforedCreated -&gt; created -&gt; beforedMount -&gt; Mounted -&gt; activated<br>第二次初始化：页面退出的时候会触发deactivated，当再次前进或者后退的时候只触发activated，不会触发created与mounted</li>
+</ul>
+</blockquote>
+<ul>
+<li>未使用keep-alive组件:<br>初始化阶段： beforedCreated -&gt; created -&gt; beforedMount -&gt; Mounted -&gt; beforeDestory -&gt; destoryed<br>第二次初始化：beforedCreated -&gt; created -&gt; beforedMount -&gt; Mounted -&gt; beforeDestory -&gt; destoryed</li>
+</ul>
+<p><em>参考文档</em><br><a href="https://cn.vuejs.org/v2/guide/instance.html#%E5%AE%9E%E4%BE%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90" target="_blank" rel="noopener">vue官网文档</a><br><a href="https://cn.vuejs.org/v2/api/#keep-alive" target="_blank" rel="noopener">keep-alive组件</a><br><a href="https://segmentfault.com/a/1190000011381906/" target="_blank" rel="noopener">详解vue生命周期</a><br><a href="https://blog.csdn.net/titoni_yunruohan/article/details/83785039" target="_blank" rel="noopener">vue实践学习——keep-alive属性及生命周期</a></p>
 
     </div>
 
@@ -222,6 +282,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"># vue</a>
+          </div>
 
         
 
@@ -294,22 +357,35 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#官方文档生命周期图示"><span class="nav-number">1.</span> <span class="nav-text">官方文档生命周期图示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各钩子函数详解"><span class="nav-number">2.</span> <span class="nav-text">各钩子函数详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-beforeCreate"><span class="nav-number">2.1.</span> <span class="nav-text">1. beforeCreate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-created"><span class="nav-number">2.2.</span> <span class="nav-text">2. created</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-beforeMounte"><span class="nav-number">2.3.</span> <span class="nav-text">3. beforeMounte</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-mounted"><span class="nav-number">2.4.</span> <span class="nav-text">4. mounted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-beforeUpdate及updated钩子函数"><span class="nav-number">2.5.</span> <span class="nav-text">5. beforeUpdate及updated钩子函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-beforeDestory和destoryed钩子函数"><span class="nav-number">2.6.</span> <span class="nav-text">6. beforeDestory和destoryed钩子函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-activated-和-deactivated"><span class="nav-number">2.7.</span> <span class="nav-text">7. activated 和 deactivated</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">Weely.cc</p>
-  <div class="site-description" itemprop="description">黎人过客的小站</div>
+  <div class="site-description" itemprop="description">基于hexo + next的个人博客系统</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -350,6 +426,26 @@
   </div>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
